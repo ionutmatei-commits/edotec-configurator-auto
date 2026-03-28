@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EdoTec — Configurator Auto</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background: #1a1a1a;
+    color: #fff;
+    font-family: system-ui, Arial, sans-serif;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: #111;
+    border-bottom: 3px solid #d63031;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    color: #fff;
+  }
+
+  .logo span {
+    color: #d63031;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: #888;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .header-tagline {
+    font-size: 13px;
+    color: #888;
+    text-align: right;
+  }
+
+  /* MAIN CONTAINER */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .hero h1 {
+    font-size: clamp(22px, 4vw, 36px);
+    font-weight: 800;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .hero h1 span {
+    color: #d63031;
+  }
+
+  .hero p {
+    color: #aaa;
+    font-size: 16px;
+  }
+
+  /* SELECTOR CARD */
+  .selector-card {
+    background: #242424;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 32px;
+  }
+
+  .selector-card h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .selector-card h2::before {
+    content: "🔍";
+    font-size: 20px;
+  }
+
+  .selector-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+
+  .selector-group {
+    flex: 1;
+    min-width: 160px;
+  }
+
+  .selector-group label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  .selector-group select {
+    width: 100%;
+    padding: 12px 16px;
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 15px;
+    font-family: inherit;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23d63031' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    transition: border-color 0.2s;
+  }
+
+  .selector-group select:focus {
+    outline: none;
+    border-color: #d63031;
+  }
+
+  .selector-group select:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .btn-find {
+    padding: 12px 28px;
+    background: #d63031;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s, transform 0.1s;
+    min-width: 160px;
+  }
+
+  .btn-find:hover {
+    background: #c0392b;
+    transform: translateY(-1px);
+  }
+
+  .btn-find:active {
+    transform: translateY(0);
+  }
+
+  .btn-find:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* RESULTS SECTION */
+  #results {
+    display: none;
+  }
+
+  .results-header {
+    background: #242424;
+    border: 1px solid #333;
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .results-title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .results-title span {
+    color: #d63031;
+  }
+
+  .btn-change {
+    padding: 8px 18px;
+    background: transparent;
+    color: #d63031;
+    border: 2px solid #d63031;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-change:hover {
+    background: #d63031;
+    color: #fff;
+  }
+
+  /* CAR SILHOUETTE */
+  .car-silhouette {
+    background: #242424;
+    border: 1px solid #333;
+    border-top: none;
+    border-bottom: none;
+    padding: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* CATEGORIES GRID */
+  .categories-container {
+    background: #242424;
+    border: 1px solid #333;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 24px;
+  }
+
+  .categories-subtitle {
+    font-size: 13px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+  }
+
+  .category-card {
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 20px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    text-decoration: none;
+    color: #fff;
+    display: block;
+  }
+
+  .category-card:hover {
+    border-color: #d63031;
+    background: #1f1010;
+    transform: translateY(-3px);
+  }
+
+  .category-card:active {
+    transform: translateY(0);
+  }
+
+  .category-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+    display: block;
+    line-height: 1;
+  }
+
+  .category-name {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #fff;
+  }
+
+  .category-desc {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 32px 20px;
+    color: #555;
+    font-size: 13px;
+    border-top: 1px solid #2a2a2a;
+    margin-top: 40px;
+  }
+
+  footer a {
+    color: #d63031;
+    text-decoration: none;
+  }
+
+  /* ANIMATION */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.35s ease forwards;
+  }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    header { padding: 12px 16px; }
+    .logo { font-size: 22px; }
+    .header-tagline { display: none; }
+    .container { padding: 24px 16px; }
+    .selector-card { padding: 20px 16px; }
+    .selector-row { flex-direction: column; }
+    .btn-find { width: 100%; }
+    .categories-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .category-icon { font-size: 28px; }
+  }
+
+  @media (max-width: 380px) {
+    .categories-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">Edo<span>Tec</span></div>
+    <div class="logo-sub">Auto Electronics</div>
+  </div>
+  <div class="header-tagline">Configurator vehicul<br>Găsește produsul potrivit</div>
+</header>
+
+<div class="container">
+
+  <div class="hero">
+    <h1>Ce ai nevoie pentru <span>mașina ta?</span></h1>
+    <p>Selectează marca și modelul și îți arătăm exact ce produse se potrivesc</p>
+  </div>
+
+  <!-- SELECTOR CARD -->
+  <div class="selector-card" id="selectorCard">
+    <h2>Selectează vehiculul tău</h2>
+    <div class="selector-row">
+      <div class="selector-group">
+        <label for="brandSelect">Marcă</label>
+        <select id="brandSelect">
+          <option value="">— Selectează marca —</option>
+        </select>
+      </div>
+      <div class="selector-group">
+        <label for="modelSelect">Model</label>
+        <select id="modelSelect" disabled>
+          <option value="">— Selectează modelul —</option>
+        </select>
+      </div>
+      <button class="btn-find" id="btnFind" disabled onclick="showResults()">
+        🔍 Găsește produse
+      </button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="results-header">
+      <div class="results-title">
+        <span id="resultVehicle"></span> — ce avem pentru tine:
+      </div>
+      <button class="btn-change" onclick="resetSelection()">↩ Schimbă mașina</button>
+    </div>
+
+    <!-- CAR SILHOUETTE SVG -->
+    <div class="car-silhouette">
+      <svg id="carSvg" width="380" height="120" viewBox="0 0 380 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Body -->
+        <rect x="30" y="55" width="320" height="42" rx="8" fill="#2a2a2a" stroke="#d63031" stroke-width="1.5"/>
+        <!-- Cabin -->
+        <path d="M90 55 C100 28, 130 22, 165 20 L225 20 C255 20, 285 28, 295 55 Z" fill="#2d2d2d" stroke="#d63031" stroke-width="1.5"/>
+        <!-- Windshield front -->
+        <path d="M210 24 L260 54 L200 54 L200 24 Z" fill="#1a2a3a" opacity="0.8" stroke="#d63031" stroke-width="1"/>
+        <!-- Windshield rear -->
+        <path d="M170 24 L120 54 L180 54 L180 24 Z" fill="#1a2a3a" opacity="0.8" stroke="#d63031" stroke-width="1"/>
+        <!-- Windows side 1 -->
+        <rect x="182" y="24" width="16" height="30" rx="2" fill="#1a2a3a" opacity="0.7" stroke="#d63031" stroke-width="0.8"/>
+        <!-- Front bumper -->
+        <rect x="22" y="75" width="20" height="16" rx="4" fill="#333" stroke="#555" stroke-width="1"/>
+        <!-- Rear bumper -->
+        <rect x="338" y="75" width="20" height="16" rx="4" fill="#333" stroke="#555" stroke-width="1"/>
+        <!-- Front wheel -->
+        <circle cx="95" cy="97" r="20" fill="#222" stroke="#d63031" stroke-width="2"/>
+        <circle cx="95" cy="97" r="11" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+        <circle cx="95" cy="97" r="3" fill="#d63031"/>
+        <!-- Rear wheel -->
+        <circle cx="285" cy="97" r="20" fill="#222" stroke="#d63031" stroke-width="2"/>
+        <circle cx="285" cy="97" r="11" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+        <circle cx="285" cy="97" r="3" fill="#d63031"/>
+        <!-- Headlight front -->
+        <ellipse cx="40" cy="65" rx="12" ry="7" fill="#d63031" opacity="0.6"/>
+        <!-- Taillight rear -->
+        <ellipse cx="342" cy="65" rx="10" ry="6" fill="#d63031" opacity="0.8"/>
+        <!-- Door lines -->
+        <line x1="175" y1="55" x2="175" y2="97" stroke="#444" stroke-width="1.5"/>
+        <line x1="205" y1="55" x2="205" y2="97" stroke="#444" stroke-width="1.5"/>
+        <!-- Door handles -->
+        <rect x="143" y="72" width="14" height="4" rx="2" fill="#555"/>
+        <rect x="220" y="72" width="14" height="4" rx="2" fill="#555"/>
+        <!-- Road line -->
+        <line x1="5" y1="117" x2="375" y2="117" stroke="#333" stroke-width="2" stroke-dasharray="20 10"/>
+      </svg>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="categories-container">
+      <div class="categories-subtitle">Alege categoria de produs</div>
+      <div class="categories-grid" id="categoriesGrid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  &copy; 2025 <a href="https://www.edotec.ro" target="_blank">EdoTec</a> — Electronică auto premium
+  &nbsp;|&nbsp; Demo configurator v1.0
+</footer>
+
+<script>
+const VEHICLE_DATA = {
+  "BMW": {
+    id: 6835,
+    models: [
+      { name: "Mini > 2001-2006", id: 12893 },
+      { name: "Seria 1 > E87 2002-2011", id: 7033 },
+      { name: "Seria 1 > F20 2012-2019", id: 7563 },
+      { name: "Seria 1 > F40 2020-", id: 7606 },
+      { name: "Seria 1 Hatchback > 2021-", id: 16806 },
+      { name: "Seria 1 Three-Box > 2016-", id: 16807 },
+      { name: "Seria 2 > Active Tourer F45 2014-", id: 10390 },
+      { name: "Seria 2 > F22 2014-2020", id: 7607 },
+      { name: "Seria 2 > G42 2021-", id: 7608 },
+      { name: "Seria 2 > Gran Tourer F45 2014-", id: 13367 },
+      { name: "Seria 2 > Grand Tourer F45 2014-", id: 7609 },
+      { name: "Seria 3 > 2001-2004", id: 12892 },
+      { name: "Seria 3 > E46 1998-2005", id: 6912 },
+      { name: "Seria 3 > E90 2006-2011", id: 6932 },
+      { name: "Seria 3 > F30 2012-2018", id: 7481 },
+      { name: "Seria 3 > G20 2019-", id: 7562 },
+      { name: "Seria 4 > F32 2013-2019", id: 7610 },
+      { name: "Seria 4 > G22 2020-", id: 7611 },
+      { name: "Seria 5 > E39 1996-2003", id: 9318 },
+      { name: "Seria 5 > E60 2004-2010", id: 7612 },
+      { name: "Seria 5 > F07 2011-2018", id: 16535 },
+      { name: "Seria 5 > F10 2010-2017", id: 6834 },
+      { name: "Seria 5 > G30 2017-", id: 7613 },
+      { name: "Seria 5 > G38 2016-2023", id: 16528 },
+      { name: "Seria 5 > G60 2023+", id: 12308 },
+      { name: "Seria 5 GT > F07 2011-2018", id: 7614 },
+      { name: "Seria 6 > E63 2004-2012", id: 16566 },
+      { name: "Seria 6 > E64 2003-2010", id: 7615 },
+      { name: "Seria 6 > F06 2011-2018", id: 7616 },
+      { name: "Seria 6 > G32 2018-", id: 7617 },
+      { name: "Seria 7 > E38 1994-2001", id: 12243 },
+      { name: "Seria 7 > E65 2002-2008", id: 8243 },
+      { name: "Seria 7 > F01 2009-2015", id: 7477 },
+      { name: "Seria 7 > G11 2016-2022", id: 7478 },
+      { name: "Seria 7 > G70 2023-", id: 7618 },
+      { name: "Seria 8 > G14 2018-", id: 7619 },
+      { name: "X1 > E84 2009-2015", id: 7170 },
+      { name: "X1 > F48 2016-2021", id: 7620 },
+      { name: "X1 > U11 2022-", id: 7621 },
+      { name: "X2 > F39 2018-", id: 7622 },
+      { name: "X3 > E83 2002-2009", id: 6923 },
+      { name: "X3 > F25 2010-2017", id: 7623 },
+      { name: "X3 > G01 2017-", id: 7624 },
+      { name: "X4 > F26 2014-2017", id: 7625 },
+      { name: "X4 > G02 2018-", id: 7626 },
+      { name: "X5 > E53 1999-2006", id: 9044 },
+      { name: "X5 > E70 2007-2013", id: 7627 },
+      { name: "X5 > F15 2014-2019", id: 7628 },
+      { name: "X5 > G05 2019-", id: 7629 },
+      { name: "X6 > E71 2007-2013", id: 7630 },
+      { name: "X6 > F16 2014-2019", id: 7631 },
+      { name: "X6 > G06 2023+", id: 7480 },
+      { name: "X6 > G18 2019-", id: 7632 },
+      { name: "X7 > G07 2023+", id: 12307 },
+      { name: "X7 > X7 Toate", id: 7633 },
+      { name: "Z4 > E85 2003-2008", id: 9050 },
+      { name: "Z4 > E89 2009-2016", id: 7479 },
+      { name: "Z4 > G29 2018-", id: 7634 },
+      { name: "i3 > 2020-2023", id: 16808 },
+      { name: "i3 > i3 Toate", id: 12860 },
+      { name: "i4 > i4 Toate", id: 12861 },
+      { name: "i7 > i7 Toate", id: 12927 },
+      { name: "i8 > i8 Toate", id: 12906 },
+      { name: "iX > iX Toate", id: 12306 },
+      { name: "iX1 > iX1 Toate", id: 12305 },
+      { name: "iX3 > iX3 Toate", id: 12928 }
+    ]
+  },
+  "Audi": {
+    id: 6833,
+    models: [
+      { name: "911 > 991 2011-2016", id: 12791 },
+      { name: "911 > 997 2004-2008", id: 12790 },
+      { name: "911 > 997 2009-2012", id: 12789 },
+      { name: "A1 > 2010-2018", id: 7583 },
+      { name: "A1 > 2019-", id: 7590 },
+      { name: "A2 > 1999-2005", id: 12475 },
+      { name: "A2 > A2 Toate", id: 9324 },
+      { name: "A3 > 1996-2014", id: 7044 },
+      { name: "A3 > 8P 2003-2011", id: 6911 },
+      { name: "A3 > 8V 2012-2019", id: 7593 },
+      { name: "A3 > 8Y 2020-", id: 7594 },
+      { name: "A3 > Sportback 2012-2019", id: 16734 },
+      { name: "A3 > Sportback 2021-", id: 16735 },
+      { name: "A3 Sedan > 2016-2020", id: 16805 },
+      { name: "A4 > Avant B8 2008-2015", id: 16737 },
+      { name: "A4 > Avant B9 2016-", id: 16736 },
+      { name: "A4 > B7 2001-2007", id: 7417 },
+      { name: "A4 > B8 2008-2015", id: 6832 },
+      { name: "A4 > B9 2016-", id: 7565 },
+      { name: "A5 > B8 2007-2015", id: 7595 },
+      { name: "A5 > B9 2016-", id: 7596 },
+      { name: "A6 > C5 1997-2004", id: 6937 },
+      { name: "A6 > C6 2004-2010", id: 8842 },
+      { name: "A6 > C7 2011-2018", id: 7475 },
+      { name: "A6 > C8 2019-", id: 7556 },
+      { name: "A7 > C7 2011-2018", id: 7597 },
+      { name: "A7 > C8 2019-", id: 7598 },
+      { name: "A8 > D3 2002-2009", id: 12396 },
+      { name: "A8 > D4 2010-2017", id: 7569 },
+      { name: "A8 > D5 2018-", id: 7599 },
+      { name: "Amarok > 2009-2016", id: 12778 },
+      { name: "BMW > 2001-2019", id: 12775 },
+      { name: "Bora > 1998-2005", id: 12403 },
+      { name: "Bora > 2005-2011", id: 12776 },
+      { name: "Cayenne > 2007-2010", id: 12788 },
+      { name: "DS4 > 2010-2016", id: 12780 },
+      { name: "Defender > 2004-2007", id: 12786 },
+      { name: "E-Tron > E-Tron Toate", id: 7601 },
+      { name: "Fabia > 2001", id: 12474 },
+      { name: "Fiesta > 2005-2008", id: 12783 },
+      { name: "Fluence > 2010-2013", id: 12792 },
+      { name: "Golf > 2003-2013", id: 12401 },
+      { name: "Jetta > 2005-2010", id: 12472 },
+      { name: "Leon > 2000-2005", id: 12420 },
+      { name: "Mercedes Benz > 2003-2019", id: 12787 },
+      { name: "Peugeot > 2005- 2018", id: 12779 },
+      { name: "Proace-Verso > 2016-2021", id: 12796 },
+      { name: "Q2 > Q2 Toate", id: 7602 },
+      { name: "Q3 > 8U 2011-2017", id: 7388 },
+      { name: "Q3 > F3 2018-", id: 7566 },
+      { name: "Q3 > Sportback 2017-", id: 16738 },
+      { name: "Q4 e-tron > Q4 e-tron Toate", id: 12395 },
+      { name: "Q5 > 80A 2016-", id: 7567 },
+      { name: "Q5 > 8R 2008-2015", id: 7212 },
+      { name: "Q5 > Sportback 2018-", id: 16739 },
+      { name: "Q7 > 2015-2020", id: 8133 },
+      { name: "Q7 > 4L 2005-2014", id: 7568 },
+      { name: "Q7 > 4M 2015-", id: 7603 },
+      { name: "Q8 > Q8 Toate", id: 7604 },
+      { name: "R8 > 2006-2014", id: 7391 },
+      { name: "R8 > 2015-", id: 12394 },
+      { name: "Scudo > 2007-2016", id: 12782 },
+      { name: "Sharan > 2005-2015", id: 12402 },
+      { name: "Superb > 2008-2022", id: 12471 },
+      { name: "TT > MK2 2006-2013", id: 6921 },
+      { name: "TT > MK3 2014-", id: 7605 },
+      { name: "Toledo > 1999-2005", id: 12473 },
+      { name: "Touareg > 2003-2015", id: 12777 },
+      { name: "Transit > 2006-2015", id: 12784 },
+      { name: "Transit-Connect > 2004-2013", id: 12785 },
+      { name: "Ulyse > 2005-2014", id: 12781 },
+      { name: "Wind > 2010-2013", id: 12795 }
+    ]
+  },
+  "Volkswagen": {
+    id: 6885,
+    models: [
+      { name: "Amarok > gen 1 2010-2021", id: 7329 },
+      { name: "Amarok > gen 2 2022-", id: 7915 },
+      { name: "Arteon > 2017-2024", id: 7428 },
+      { name: "Arteon CC > 2018-2023", id: 16930 },
+      { name: "Atlas > 2018 - 2024", id: 13320 },
+      { name: "Atlas Cross Sport > 2018-2023", id: 16931 },
+      { name: "Atlas Cross Sport > 2024-", id: 16932 },
+      { name: "Atlas Hatchback > 2018-2023", id: 16933 },
+      { name: "Atlas Hatchback > 2024-", id: 16934 },
+      { name: "Caddy > gen 3 2003-2019", id: 7916 },
+      { name: "Caddy > gen 4 2020-", id: 7917 },
+      { name: "Caravelle > 2003-2008", id: 12978 },
+      { name: "Caravelle > 2003-2015", id: 7918 },
+      { name: "Caravelle > 2015-", id: 7919 },
+      { name: "Crafter > gen 1 2011-2017", id: 6919 },
+      { name: "Crafter > gen 2 2017-", id: 7198 },
+      { name: "Eos > 2006-2016", id: 7920 },
+      { name: "Fox > 2003-2011", id: 12397 },
+      { name: "Golf > 1974-1983", id: 12944 },
+      { name: "Golf > 1983-1992", id: 13001 },
+      { name: "Golf > 4 1998-2004", id: 12399 },
+      { name: "Golf > 5 2004-2009", id: 7364 },
+      { name: "Golf > 6 2010-2013", id: 7069 },
+      { name: "Golf > 7 2013-2020", id: 7184 },
+      { name: "Golf > 7 GTE Hybrid 2014-2020", id: 16788 },
+      { name: "Golf > 7 GTI 2013-2020", id: 16789 },
+      { name: "Golf > 7 Hatchback 2012-2020", id: 16787 },
+      { name: "Golf > 7 R 2014-2020", id: 16791 },
+      { name: "Golf > 7 TSI 2012-", id: 16790 },
+      { name: "Golf > 7.5 Facelift 2016-2017", id: 16786 },
+      { name: "Golf > 8 2021-", id: 7921 },
+      { name: "Golf Plus > 2004-2014", id: 7922 },
+      { name: "Golf Sportsvan > 2014-2020", id: 7214 },
+      { name: "ID Buzz > 2022-", id: 16935 },
+      { name: "ID.3 > 2019-", id: 7923 },
+      { name: "ID.4 > 2020-", id: 7924 },
+      { name: "ID.6 > 2021-", id: 7925 },
+      { name: "ID.buzz > 2022-", id: 12309 },
+      { name: "ID3 > 2020-2025", id: 16936 },
+      { name: "ID4 > 2020-2022", id: 12445 },
+      { name: "ID4X > 2021-2025", id: 16937 },
+      { name: "ID5 > 2021-", id: 16938 },
+      { name: "Jetta 1983-1992", id: 13002 },
+      { name: "Jetta > gen 4 1999-2004", id: 9313 },
+      { name: "Jetta > gen 5 2005-2010", id: 7926 },
+      { name: "Jetta > gen 6 2011-2017", id: 7205 },
+      { name: "Jetta > gen 7 2018-", id: 7927 },
+      { name: "Lamando L > 2022-", id: 16800 },
+      { name: "Lupo > 1998-2005", id: 12400 },
+      { name: "Magotan > 2018-", id: 16801 },
+      { name: "Multivan > 2003-2015", id: 12470 },
+      { name: "New Beetle > New Beetle Toate", id: 7031 },
+      { name: "Passat > 2019-2025", id: 16939 },
+      { name: "Passat > B5 1998-2005", id: 7332 },
+      { name: "Passat > B6 2005-2010", id: 7928 },
+      { name: "Passat > B7 2010-2015", id: 7427 },
+      { name: "Passat > B8 2016-2019", id: 7186 },
+      { name: "Passat Alltrack > 2015-2022", id: 16940 },
+      { name: "Passat CC > 2025-", id: 16941 },
+      { name: "Passat CC > B7 2009-2016", id: 7425 },
+      { name: "Phaeton > gen 1 2002-2009", id: 10234 },
+      { name: "Phaeton > gen 2 2009-2016", id: 12398 },
+      { name: "Polo > 1999-2001", id: 9472 },
+      { name: "Polo > 2004-2012", id: 12406 },
+      { name: "Polo > gen 4 2002-2008", id: 7385 },
+      { name: "Polo > gen 5 2009-2016", id: 7016 },
+      { name: "Polo > gen 6 2017-", id: 7929 },
+      { name: "Scirocco > 2008-2017", id: 7930 },
+      { name: "Sharan > 1995-2000", id: 12945 },
+      { name: "Sharan > gen 1 1998-2009", id: 8987 },
+      { name: "Sharan > gen 2 2010-", id: 7123 },
+      { name: "T-Cross > 2018-", id: 7932 },
+      { name: "T-Cross > 2018-2022", id: 16796 },
+      { name: "T-Cross > 2023-", id: 16798 },
+      { name: "T-Roc > 2017-", id: 7936 },
+      { name: "T5 > 2014-2015", id: 16802 },
+      { name: "Taigo > 2020-", id: 7931 },
+      { name: "Taigun > 2018-2022", id: 16797 },
+      { name: "Taigun > 2023-", id: 16799 },
+      { name: "Taos > 2020-", id: 16795 },
+      { name: "Tayron > 2018-2024", id: 16794 },
+      { name: "Tayron > 2024-", id: 16942 },
+      { name: "Tiguan > 2024-", id: 16943 },
+      { name: "Tiguan > gen 1 2007-2015", id: 7322 },
+      { name: "Tiguan > gen 2 2016-", id: 7187 },
+      { name: "Tiguan L PRO > 2024-", id: 16793 },
+      { name: "Touareg > gen 1 7L 2002-2009", id: 6909 },
+      { name: "Touareg > gen 2 7P 2010-2018", id: 6942 },
+      { name: "Touareg > gen 3 CR 2018-", id: 7933 },
+      { name: "Touran > gen 1 2003-2014", id: 7934 },
+      { name: "Touran > gen 2 2015-", id: 7176 },
+      { name: "Transporter > -2008", id: 12404 },
+      { name: "Transporter > 2019-2022", id: 12407 },
+      { name: "Transporter > T5 2003-2009", id: 12240 },
+      { name: "Transporter > T5 facelift 2010-2015", id: 7935 },
+      { name: "Transporter > T6 2016-", id: 7517 },
+      { name: "Transporter > T6 facelift 2020-", id: 9030 },
+      { name: "UP! > 2011-2020", id: 12408 },
+      { name: "Up > Up Toate", id: 7937 },
+      { name: "e-Golf > 2015-2020", id: 16792 }
+    ]
+  },
+  "Mercedes Benz": {
+    id: 6890,
+    models: [
+      { name: "AMG GT > 2014-2020", id: 12386 },
+      { name: "CL > C215 1999-2006", id: 9164 },
+      { name: "CL > C216 2006-2014", id: 7784 },
+      { name: "CLA > 2024-", id: 13552 },
+      { name: "CLA > C117 2013-2017", id: 7426 },
+      { name: "CLA > C118 2019-", id: 12333 },
+      { name: "CLA Sedan > 2021-2024", id: 16898 },
+      { name: "CLC > 2002-2008", id: 12245 },
+      { name: "CLE Cabrio > A236 2024-", id: 13562 },
+      { name: "CLE Coupe > C236 2023-", id: 13561 },
+      { name: "CLK > 1997-2009", id: 12424 },
+      { name: "CLK > C209 2002-2008", id: 7045 },
+      { name: "CLS > C218 2011-2018", id: 7540 },
+      { name: "CLS > C219 2004-2010", id: 7793 },
+      { name: "CLS > C257 2019-", id: 7794 },
+      { name: "Citan > 2012-2021", id: 9454 },
+      { name: "Clasa A > 1997-2012", id: 12423 },
+      { name: "Clasa A > 2012-2018", id: 12302 },
+      { name: "Clasa A > 2020-2022", id: 12925 },
+      { name: "Clasa A > 2024-", id: 13551 },
+      { name: "Clasa A > W169 2004-2011", id: 7785 },
+      { name: "Clasa A > W176 2012-2017", id: 7545 },
+      { name: "Clasa A > W177 2018-", id: 7472 },
+      { name: "Clasa A Hatchback > 2013-2018", id: 16896 },
+      { name: "Clasa A Hatchback > 2019-", id: 16897 },
+      { name: "Clasa B > 2024-", id: 13556 },
+      { name: "Clasa B > W245 2005-2011", id: 7786 },
+      { name: "Clasa B > W246 2012-2018", id: 8936 },
+      { name: "Clasa B > W247 2019-", id: 12331 },
+      { name: "Clasa C > 1993-2014", id: 12421 },
+      { name: "Clasa C > W203 2001-2007", id: 8040 },
+      { name: "Clasa C > W204 2008-2014", id: 6964 },
+      { name: "Clasa C > W205 2015-2021", id: 8933 },
+      { name: "Clasa C > W206 2022-", id: 7471 },
+      { name: "Clasa C All-Terrain > X206 2022-", id: 13560 },
+      { name: "Clasa C T-Model/Kombi > S206 2021-", id: 13559 },
+      { name: "Clasa E > 1995-2009", id: 12422 },
+      { name: "Clasa E > W207 2008-2011", id: 7787 },
+      { name: "Clasa E > W207 2012-2014", id: 8798 },
+      { name: "Clasa E > W207 2015-2018", id: 8797 },
+      { name: "Clasa E > W210 1996-2003", id: 9452 },
+      { name: "Clasa E > W211 2002-2009", id: 7788 },
+      { name: "Clasa E > W212 2010-2016", id: 6889 },
+      { name: "Clasa E > W213 2017-2023", id: 7546 },
+      { name: "Clasa E > W214 2023-", id: 13563 },
+      { name: "Clasa E Att-Terrain > X214 2023-", id: 13565 },
+      { name: "Clasa E T-Modell/Kombi > S214 2023-", id: 13564 },
+      { name: "Clasa G > 2014-2020", id: 12384 },
+      { name: "Clasa G > W463 2001-", id: 12244 },
+      { name: "Clasa GL > X164 2006-2011", id: 7789 },
+      { name: "Clasa GL > X166 2012-2015", id: 12353 },
+      { name: "Clasa ML > W163 1999-2005", id: 7414 },
+      { name: "Clasa ML > W164 2006-2011", id: 7790 },
+      { name: "Clasa ML > W166 2012-2015", id: 7144 },
+      { name: "Clasa R > R251 2005-2012", id: 6967 },
+      { name: "Clasa R > W251 2004 - 2007", id: 16658 },
+      { name: "Clasa S > W220 1998-2006", id: 7791 },
+      { name: "Clasa S > W221 2007-2013", id: 7429 },
+      { name: "Clasa S > W222 2014-2021", id: 7430 },
+      { name: "Clasa S > W223 2022-", id: 7544 },
+      { name: "Clasa SLC > 2014-2020", id: 12385 },
+      { name: "Clasa V > W447 2014-2023", id: 7470 },
+      { name: "Clasa X > W470 2017-", id: 7792 },
+      { name: "EQA > 2021-", id: 12884 },
+      { name: "EQB > 2021-", id: 12882 },
+      { name: "EQC > 2019-", id: 12880 },
+      { name: "EQE > 2022-", id: 12885 },
+      { name: "EQE SUV > X294 2022-", id: 13566 },
+      { name: "EQS > 2022-", id: 12886 },
+      { name: "EQS SUV > X296 2022-", id: 13567 },
+      { name: "EQV > 2022-", id: 12881 },
+      { name: "GLA > H247 2019-", id: 9001 },
+      { name: "GLA > X156 2013-2018", id: 10385 },
+      { name: "GLB > 2019-", id: 12332 },
+      { name: "GLB > 2024-", id: 13558 },
+      { name: "GLC > X253 2015-2021", id: 10383 },
+      { name: "GLC > X254 2022-", id: 12887 },
+      { name: "GLC Coupe > C254 2023-", id: 13568 },
+      { name: "GLE > 2024-", id: 13570 },
+      { name: "GLE > W166 2015-2019", id: 9037 },
+      { name: "GLE > W167 2020-", id: 7453 },
+      { name: "GLK > 2012-2015", id: 7068 },
+      { name: "GLK > NTG 4 2008-2012", id: 7442 },
+      { name: "GLK > X164 2006-2012", id: 12855 },
+      { name: "GLS > X166 2013-2019", id: 12382 },
+      { name: "GLS > X167 2020-", id: 12303 },
+      { name: "GT > 2014-2022", id: 12879 },
+      { name: "GT AMG Coupe > C192 2023-", id: 13569 },
+      { name: "SL > R230 2001-2011", id: 7145 },
+      { name: "SL > R231 2012-2021", id: 12383 },
+      { name: "SL > R232 2022-", id: 12888 },
+      { name: "SLK > R171 2004-2010", id: 7124 },
+      { name: "SLK > R172 2011-2020", id: 12878 },
+      { name: "SLR > 2003-2010", id: 12883 },
+      { name: "SLS > 2010-2015", id: 7795 },
+      { name: "Sprinter > gen 2 2006-2018", id: 7796 },
+      { name: "Sprinter > gen 3 2019-", id: 7284 },
+      { name: "Vaneo > 2002-2005", id: 12889 },
+      { name: "Vario > Vario Toate", id: 7797 },
+      { name: "Viano > W447 2014-2023", id: 10384 },
+      { name: "Viano > W639 2003-2013", id: 7285 },
+      { name: "Vito > W447 2014-2023", id: 7287 },
+      { name: "Vito > W639 2003-2013", id: 7798 }
+    ]
+  },
+  "Opel": {
+    id: 6903,
+    models: [
+      { name: "Adam > 2012-2019", id: 7824 },
+      { name: "Agila > gen 1 2000-2006", id: 12996 },
+      { name: "Agila > gen 2 2007-2014", id: 7310 },
+      { name: "Antara > 2006-2015", id: 6902 },
+      { name: "Astra > G 1998-2004", id: 7825 },
+      { name: "Astra > H 2005-2014", id: 7331 },
+      { name: "Astra > J 2009-2018", id: 7826 },
+      { name: "Astra > K 2015-2021", id: 7025 },
+      { name: "Astra > L 2022-", id: 7827 },
+      { name: "Cascada > 2013-2019", id: 7828 },
+      { name: "Combo > Combo C 2002-2012", id: 12923 },
+      { name: "Combo > Combo D 2012-2018", id: 7243 },
+      { name: "Combo > Combo E 2018-", id: 7248 },
+      { name: "Corsa > Corsa C 2000-2005", id: 12437 },
+      { name: "Corsa > Corsa D 2006-2013", id: 7829 },
+      { name: "Corsa > Corsa E 2014-2018", id: 7830 },
+      { name: "Corsa > Corsa F 2019-", id: 7343 },
+      { name: "Crossland > 2017-", id: 7831 },
+      { name: "GrandLand > 2017-", id: 7832 },
+      { name: "Insignia > gen 1 2008-2012", id: 6941 },
+      { name: "Insignia > gen 1 facelift 2013-2016", id: 6992 },
+      { name: "Insignia > gen 2 2017-2019", id: 7203 },
+      { name: "Insignia > gen 2 facelit 2020-", id: 7833 },
+      { name: "Karl > 2015-2019", id: 7206 },
+      { name: "Meriva > gen 1 2003-2009", id: 7834 },
+      { name: "Meriva > gen 2 2010-2017", id: 7378 },
+      { name: "Mokka > gen 1 J13 2012-2015", id: 7100 },
+      { name: "Mokka > gen 2 2020-", id: 7835 },
+      { name: "Mokka X > gen 1 J13 facelift 2016-2019", id: 7101 },
+      { name: "Movano > gen 3 2010-", id: 7253 },
+      { name: "Signum > 2003-2008", id: 9407 },
+      { name: "Tigra > 2004-2009", id: 13010 },
+      { name: "Vectra > Vectra C 2002-2010", id: 12267 },
+      { name: "Vivaro > Vivaro A 2001-2014", id: 8431 },
+      { name: "Vivaro > Vivaro B 2014-2018", id: 7308 },
+      { name: "Vivaro > Vivaro C 2019-", id: 7314 },
+      { name: "Zafira > B 2005-2010", id: 12268 },
+      { name: "Zafira > C 2011-2019", id: 7836 }
+    ]
+  },
+  "Ford": {
+    id: 6895,
+    models: [
+      { name: "B-MAX > 2012-2017", id: 7671 },
+      { name: "Bronco > 2021-", id: 13343 },
+      { name: "C-MAX > gen 1 2002-2010", id: 9598 },
+      { name: "C-MAX > gen 2 2011-2019", id: 7672 },
+      { name: "E-Transit > 2020-", id: 13583 },
+      { name: "Ecosport > gen 2 2012-2016", id: 6976 },
+      { name: "Ecosport > gen 2 facelift 2017-", id: 7274 },
+      { name: "Edge > 2022-", id: 16828 },
+      { name: "Edge > gen 1 2007-2014", id: 7673 },
+      { name: "Edge > gen 2 2015-2021", id: 7674 },
+      { name: "Escape > 2013-2016", id: 10393 },
+      { name: "Escape > 2017-2019", id: 12645 },
+      { name: "Escape > 2020-", id: 16741 },
+      { name: "Everest > 2015-2021", id: 12644 },
+      { name: "Everest > 2023-", id: 16742 },
+      { name: "Explorer > 1995-2001", id: 12965 },
+      { name: "Explorer > 2011-", id: 10391 },
+      { name: "Explorer > 2024-", id: 13585 },
+      { name: "F150 > gen 12 2009-2014", id: 7675 },
+      { name: "F150 > gen 15 2015-2020", id: 7676 },
+      { name: "F150 > gen 16 2021-", id: 7677 },
+      { name: "Fiesta > 2010-2017", id: 12643 },
+      { name: "Fiesta > gen 4 2002-2007", id: 7355 },
+      { name: "Fiesta > gen 5 2008-2016", id: 6979 },
+      { name: "Fiesta > gen 6 2017-", id: 7354 },
+      { name: "Focus > 4 Wagon-Estate 2021-", id: 16743 },
+      { name: "Focus > gen 1 1998-2004", id: 7359 },
+      { name: "Focus > gen 2 2005-2010", id: 6949 },
+      { name: "Focus > gen 3 2011-2018", id: 6952 },
+      { name: "Focus > gen 4 2019-", id: 7202 },
+      { name: "Fusion > 2002-2012", id: 7678 },
+      { name: "Galaxy > gen 2 2006-2014", id: 7679 },
+      { name: "Galaxy > gen 3 2015-", id: 7680 },
+      { name: "Jaguar > 2010-", id: 12642 },
+      { name: "KA > 2018-2021", id: 12513 },
+      { name: "Ka > gen 1 1996-2007", id: 9156 },
+      { name: "Ka > gen 2 2008-2013", id: 9221 },
+      { name: "Ka > gen 3 2013-", id: 7375 },
+      { name: "Kuga > 2024-", id: 13579 },
+      { name: "Kuga > gen 1 2008-2012", id: 7681 },
+      { name: "Kuga > gen 2 2013-2018", id: 7682 },
+      { name: "Kuga > gen 3 2019-2024", id: 7683 },
+      { name: "Land Rover > Toate", id: 12640 },
+      { name: "Mondeo > 1993-2000", id: 12964 },
+      { name: "Mondeo > gen 2 2000-2005", id: 7102 },
+      { name: "Mondeo > gen 3 2006-2011", id: 7209 },
+      { name: "Mondeo > gen 4 2012-2023", id: 7474 },
+      { name: "Mondeo > gen 5 2020-", id: 13342 },
+      { name: "Mondeo Estate > 2015-2021", id: 16829 },
+      { name: "Mondeo Liftback > 2015-2023", id: 16830 },
+      { name: "Mustang > 2024-", id: 13580 },
+      { name: "Mustang > Mach-E 2021-", id: 13345 },
+      { name: "Mustang > gen 5 2005-2014", id: 7210 },
+      { name: "Mustang > gen 6 2015-2023", id: 7104 },
+      { name: "Puma > 1997-2002", id: 12963 },
+      { name: "Puma > 2019", id: 13344 },
+      { name: "Puma > 2019-", id: 7684 },
+      { name: "Puma > 2024-", id: 13581 },
+      { name: "Puma Crossover > 2019-2023", id: 16831 },
+      { name: "Range Rover > Toate", id: 12641 },
+      { name: "Ranger > 2012-2020", id: 7444 },
+      { name: "Ranger > 2022-", id: 13586 },
+      { name: "Ranger > gen 1 1998-2010", id: 7305 },
+      { name: "Ranger > gen 2 2011-", id: 6977 },
+      { name: "Raptor > gen 1 2010-2016", id: 7685 },
+      { name: "Raptor > gen 2 2017-2020", id: 7686 },
+      { name: "Raptor > gen 3 2021-", id: 7687 },
+      { name: "S-MAX > gen 1 2006-2014", id: 7688 },
+      { name: "S-MAX > gen 2 2015-", id: 7689 },
+      { name: "Taurus > 2008-2012", id: 12646 },
+      { name: "Transit > 2018-2021", id: 12514 },
+      { name: "Transit > gen 3 2000-2005", id: 12858 },
+      { name: "Transit > gen 3 facelift 2006-2013", id: 7511 },
+      { name: "Transit > gen 4 2014-2019", id: 7410 },
+      { name: "Transit > gen 4 facelift 2020-", id: 7407 },
+      { name: "Transit Connect > gen 1 2002-2011", id: 12875 },
+      { name: "Transit Connect > gen 2 2012-2020", id: 7690 },
+      { name: "Transit Connect > gen 3 2021-", id: 7691 },
+      { name: "Transit Courier > 2014-2023", id: 13399 },
+      { name: "Transit Custom > 2023-", id: 13584 },
+      { name: "Transit Custom > gen 1 2012-2023", id: 7018 },
+      { name: "Turneo Courier > 2014-2023", id: 13400 },
+      { name: "Turneo Custom > 2023-", id: 13582 },
+      { name: "Winsdstar > 1994-1998", id: 12966 }
+    ]
+  },
+  "Toyota": {
+    id: 6881,
+    models: [
+      { name: "4-Runner > Toate", id: 12850 },
+      { name: "4-Runner > gen 4 2002-2008", id: 9371 },
+      { name: "4-Runner > gen 5 2009-2013", id: 7897 },
+      { name: "4-Runner > gen 5 facelift 2014-2023", id: 7898 },
+      { name: "4Runner > 2025-", id: 16922 },
+      { name: "Alphard > 2003 - 2019", id: 13327 },
+      { name: "Alphard > Alphard Toate", id: 9308 },
+      { name: "Auris > gen 1 E150 2006-2011", id: 12265 },
+      { name: "Auris > gen 1 E150 2006-2013", id: 7899 },
+      { name: "Auris > gen 2 E180 2012-2017", id: 7194 },
+      { name: "Auris > gen 3 E210 2018-", id: 7193 },
+      { name: "Avalon > 2005-2011", id: 12356 },
+      { name: "Avalon > 2019-", id: 13352 },
+      { name: "Avanza > 2015 - 2019", id: 13329 },
+      { name: "Avanza > 2022-", id: 16778 },
+      { name: "Avensis > 2016-", id: 12930 },
+      { name: "Avensis > gen 2 T250 2003-2009", id: 7028 },
+      { name: "Avensis > gen 3 T270 2009-2018", id: 7140 },
+      { name: "Avensis-Verso > 2001-2005", id: 12971 },
+      { name: "Aygo > gen 1 2005-2014", id: 7268 },
+      { name: "Aygo > gen 2 2014-", id: 7900 },
+      { name: "BZ4X > Toate", id: 16589 },
+      { name: "C-HR > 2016-", id: 7043 },
+      { name: "C-HR > 2024-", id: 16925 },
+      { name: "CH-R > 2008-2021", id: 13000 },
+      { name: "Camry > 2021-2024", id: 7197 },
+      { name: "Camry > 2024-", id: 16924 },
+      { name: "Camry > XV50 2011-2019", id: 7270 },
+      { name: "Camry > XV70 2018-", id: 7271 },
+      { name: "Celica > 2000-2005", id: 12997 },
+      { name: "Comfort Hybrid > 2017-", id: 16780 },
+      { name: "Corolla > gen 10 E140 2006-2011", id: 6918 },
+      { name: "Corolla > gen 11 E160 2012-2017", id: 7183 },
+      { name: "Corolla > gen 12 E210 2018-", id: 7901 },
+      { name: "Corolla > gen 9 E120 2000-2005", id: 9409 },
+      { name: "Corolla Cross > 2020-", id: 7454 },
+      { name: "Corolla Fielder > 2016-", id: 16785 },
+      { name: "Corolla Hatchback > 2019-2023", id: 16926 },
+      { name: "Corolla Sedan > 2014-2019", id: 16784 },
+      { name: "Corolla Sedan > 2020-", id: 16783 },
+      { name: "Corolla Sport > 2022-", id: 16779 },
+      { name: "Corolla Verso > gen 1 E120 2001-2004", id: 12263 },
+      { name: "Corolla Verso > gen 2 AR10 2004-2010", id: 6880 },
+      { name: "Crown > 2010 - 2014", id: 13330 },
+      { name: "Crown > 2015 - 2018", id: 13331 },
+      { name: "Echo > 2000-2003", id: 12736 },
+      { name: "Echo > 2003-2005", id: 12998 },
+      { name: "Esquire > R70 R80 2007 - 2019", id: 13323 },
+      { name: "Estima > 2006-2013", id: 7275 },
+      { name: "FJ > 2006-2022", id: 7358 },
+      { name: "Fortuner > 2016-", id: 16773 },
+      { name: "Fortuner > 2020-2024", id: 16927 },
+      { name: "GT86 > 2012-2021", id: 7902 },
+      { name: "Granvia > 2019 - 2020", id: 13332 },
+      { name: "Harrier > 2014-2020", id: 16774 },
+      { name: "Harrier > 2021-", id: 16775 },
+      { name: "Hiace > gen 5 H200 2004-2018", id: 7506 },
+      { name: "Hiace > gen 6 H300 2019-", id: 7903 },
+      { name: "Highlander > gen 2 2007-2012", id: 7277 },
+      { name: "Highlander > gen 3 2013-2018", id: 7278 },
+      { name: "Highlander > gen 4 2019-", id: 7904 },
+      { name: "Hilux > gen 7 2004-2014", id: 6950 },
+      { name: "Hilux > gen 8 2015-2023", id: 7217 },
+      { name: "IQ > 2008-2015", id: 7905 },
+      { name: "Innova > 2016 - 2019", id: 13328 },
+      { name: "Landcruiser > J100 1998-2006", id: 7088 },
+      { name: "Landcruiser > J200 2007-2020", id: 7179 },
+      { name: "Landcruiser > J300 2021-", id: 7906 },
+      { name: "Landcruiser > L200 V8 2008-2020", id: 7445 },
+      { name: "Landcruiser Prado > J120 2002-2008", id: 7002 },
+      { name: "Landcruiser Prado > J150 2009-2014", id: 7178 },
+      { name: "Landcruiser Prado > J150 facelift 1 2015-2018", id: 7159 },
+      { name: "Landcruiser Prado > J150 facelift 2 2019-", id: 7162 },
+      { name: "Matrix > 2002-2007", id: 12703 },
+      { name: "Matrix > 2005-2007", id: 12704 },
+      { name: "Matrix > 2007-2011", id: 12999 },
+      { name: "Mirai > Mirai Toate", id: 12264 },
+      { name: "Noah > R70 R80 2007 - 2019", id: 13321 },
+      { name: "Prado > 2010-2022", id: 16928 },
+      { name: "Prado > LC250 2023-", id: 16588 },
+      { name: "Previa > gen 3 2006-", id: 7907 },
+      { name: "Prius + > 2011-2021", id: 7386 },
+      { name: "Prius > gen 2 2003-2008", id: 7112 },
+      { name: "Prius > gen 3 2009-2014", id: 7142 },
+      { name: "Prius > gen 4 2015-2021", id: 7143 },
+      { name: "Prius > gen 5 2022-", id: 12912 },
+      { name: "Proace > 2016-", id: 7085 },
+      { name: "RAV4 > 2018-", id: 12929 },
+      { name: "RAV4 > 2020-", id: 16948 },
+      { name: "RAV4 > XA20/XA30 2001-2014", id: 12710 },
+      { name: "RAV4 > gen 2 2000-2005", id: 7395 },
+      { name: "RAV4 > gen 3 2006-2011", id: 6901 },
+      { name: "RAV4 > gen 4 2012-2017", id: 7171 },
+      { name: "RAV4 > gen 5 2018-2020", id: 7394 },
+      { name: "Raize > 2022-", id: 16781 },
+      { name: "Rush > 2019-", id: 10398 },
+      { name: "Sequoia > gen 1 2000-2006", id: 12274 },
+      { name: "Sequoia > gen 2 2007-2021", id: 7283 },
+      { name: "Sequoia > gen 3 2022-", id: 7908 },
+      { name: "Sienna > 1998-2012", id: 12972 },
+      { name: "Sienna > gen 3 2010-2019", id: 7909 },
+      { name: "Sienna > gen 4 2020-", id: 7910 },
+      { name: "Sienna > gen 4 2021-", id: 16584 },
+      { name: "Sienta XP170 > 2015 - 2019", id: 13324 },
+      { name: "Solara > 1998-2003", id: 12750 },
+      { name: "Supra > 2019-", id: 7911 },
+      { name: "Tacoma > gen 2 2004-2014", id: 7912 },
+      { name: "Tacoma > gen 3 2015-2022", id: 7913 },
+      { name: "Town Ace > 2022-", id: 16782 },
+      { name: "Tundra > 2000-2006", id: 12751 },
+      { name: "Tundra > 2007-2013", id: 12357 },
+      { name: "Tundra > gen 2 2007-2020", id: 7409 },
+      { name: "Tundra > gen 3 2021-", id: 7914 },
+      { name: "Urban Cruiser > 2007-2016", id: 7440 },
+      { name: "Velfire > 2015-2022", id: 16923 },
+      { name: "Veloz > 2022-", id: 16777 },
+      { name: "Venza > 2009-2012", id: 12355 },
+      { name: "Venza > 2012 - 2017", id: 13325 },
+      { name: "Voxy > R70 R80 2007 - 19", id: 13322 },
+      { name: "Wish > 2009-2017", id: 13326 },
+      { name: "Yaris > 2002-2006", id: 12949 },
+      { name: "Yaris > gen 2 2005-2012", id: 7148 },
+      { name: "Yaris > gen 3 2013-2021", id: 7149 },
+      { name: "Yaris > gen 4 2022-", id: 7289 },
+      { name: "Yaris Cross > 2021-", id: 16776 },
+      { name: "Yaris-Verso > 2003-2005", id: 12973 }
+    ]
+  },
+  "Renault": {
+    id: 6935,
+    models: [
+      { name: "Alaskan > gen 3 D23 2014-", id: 9617 },
+      { name: "Arkana > 2019-", id: 7166 },
+      { name: "Austral > 2022-", id: 12987 },
+      { name: "Captur > gen 1 2013-2018", id: 7039 },
+      { name: "Captur > gen 2 2019-", id: 7846 },
+      { name: "Clio > 1990-1998", id: 9458 },
+      { name: "Clio > 2009-2013", id: 12794 },
+      { name: "Clio > Clio 3 2005-2011", id: 7340 },
+      { name: "Clio > Clio 4 2012-2019", id: 7181 },
+      { name: "Clio > Clio 5 2019", id: 7847 },
+      { name: "Espace > gen 4 J81 2002-2014", id: 12985 },
+      { name: "Espace > gen 5 JFC 2015-2022", id: 12988 },
+      { name: "Express > 2021-", id: 7353 },
+      { name: "Fluence > 2009-2015", id: 7848 },
+      { name: "Grand-Scenic > 2009-2013", id: 12974 },
+      { name: "Kadjar > 2015-2021", id: 7020 },
+      { name: "Kangoo > gen 2 2007-2019", id: 7376 },
+      { name: "Kangoo > gen 3 2020-", id: 7849 },
+      { name: "Koleos > gen 1 2006-2015", id: 7087 },
+      { name: "Koleos > gen 2 2016-", id: 7850 },
+      { name: "Laguna > 1993-2015", id: 12943 },
+      { name: "Laguna > 2010-2016", id: 12975 },
+      { name: "Laguna > gen 2 2000-2006", id: 9370 },
+      { name: "Laguna > gen 3 2007-2015", id: 7280 },
+      { name: "Latitude > 2010-2015", id: 7851 },
+      { name: "Mascot > Mascot Toate", id: 12990 },
+      { name: "Master > 2010-", id: 7239 },
+      { name: "Megane > 1995-2002", id: 12942 },
+      { name: "Megane > gen 2 2002-2007", id: 6934 },
+      { name: "Megane > gen 3 2008-2015", id: 7852 },
+      { name: "Megane > gen 4 2016-", id: 7853 },
+      { name: "Megane E-Tech > 2022-", id: 16914 },
+      { name: "Modus > 2004-2012", id: 12874 },
+      { name: "Scenic > gen 2 2003-2015", id: 9402 },
+      { name: "Scenic > gen 3 2016-", id: 12989 },
+      { name: "Talisman > 2015-2022", id: 7854 },
+      { name: "Trafic > gen 2 X83 2001-2013", id: 7441 },
+      { name: "Trafic > gen 3 X82 2014-", id: 7116 },
+      { name: "Twingo > gen 2 2007-2013", id: 9403 },
+      { name: "Twingo > gen 3 2014-", id: 7855 },
+      { name: "Twizy > Twizy Toate", id: 12991 },
+      { name: "Zoe > Toate", id: 12924 }
+    ]
+  },
+  "Dacia": {
+    id: 6828,
+    models: [
+      { name: "Altima > 2007-2019", id: 12449 },
+      { name: "Cube > 2010-", id: 12450 },
+      { name: "Dokker > Dokker Toate", id: 7350 },
+      { name: "Duster > 2012-2017", id: 12563 },
+      { name: "Duster > gen 1 2010-2016", id: 6954 },
+      { name: "Duster > gen 2 2017-2021", id: 7244 },
+      { name: "Duster > gen 2 facelift 2022-", id: 7351 },
+      { name: "Duster > gen 3 facelift 2024+", id: 6827 },
+      { name: "GT-86 > 2012-2017", id: 12661 },
+      { name: "Jogger > 2022-", id: 7658 },
+      { name: "Justy > 2007-2011", id: 12659 },
+      { name: "Koleos > 2012-2017", id: 12566 },
+      { name: "Lodgy > Lodgy Toate", id: 7659 },
+      { name: "Logan > 2012-2016", id: 12565 },
+      { name: "Logan > 2017-2020", id: 12651 },
+      { name: "Logan > gen 1 2004-2011", id: 7091 },
+      { name: "Logan > gen 2 2012-2019", id: 7660 },
+      { name: "Logan > gen 3 2020-2022", id: 7661 },
+      { name: "Maxima > 2008-", id: 12655 },
+      { name: "Megane > 2012-2016", id: 12567 },
+      { name: "Murano > 2008-2019", id: 12451 },
+      { name: "NV200 > 2010-2019", id: 7520 },
+      { name: "NV300 > 2016-2019", id: 12656 },
+      { name: "NV400 > 2010-2019", id: 12657 },
+      { name: "Patrol > 2011-2015", id: 12658 },
+      { name: "Sandero > 2012-2016", id: 12564 },
+      { name: "Sandero > 2017-2020", id: 12652 },
+      { name: "Sandero > gen 1 2008-2011", id: 7662 },
+      { name: "Sandero > gen 2 2012-2019", id: 7240 },
+      { name: "Sandero > gen 3 2020-", id: 7663 },
+      { name: "Sandero-Stepway > 2017-2020", id: 12653 },
+      { name: "Sentra > 2007-2019", id: 12452 },
+      { name: "Spring > 2021-", id: 7664 },
+      { name: "Talento > 2016-2019", id: 12654 }
+    ]
+  },
+  "Skoda": {
+    id: 7013,
+    models: [
+      { name: "Bora > 1998-2004", id: 13393 },
+      { name: "Citigo > 2012-2017", id: 12977 },
+      { name: "Citigo > Citigo Toate", id: 7859 },
+      { name: "Enyaq > 2021-", id: 8429 },
+      { name: "Fabia > 1999-2003", id: 13395 },
+      { name: "Fabia > gen 1 1999-2006", id: 9668 },
+      { name: "Fabia > gen 2 2007-2013", id: 7276 },
+      { name: "Fabia > gen 3 2014-2020", id: 7012 },
+      { name: "Fabia > gen 5 2021-", id: 7860 },
+      { name: "Golf > 4 1998-2003", id: 13394 },
+      { name: "Kamiq > 2019-", id: 7279 },
+      { name: "Karoq > 2017-", id: 7861 },
+      { name: "Kodiak > 2016-", id: 7862 },
+      { name: "Kodiaq > 2017-2022", id: 12442 },
+      { name: "Octavia > 2001-2005", id: 13396 },
+      { name: "Octavia > Sportline 2017-", id: 16769 },
+      { name: "Octavia > gen 1 1996-2004", id: 12439 },
+      { name: "Octavia > gen 2 2005-2012", id: 7155 },
+      { name: "Octavia > gen 3 2013-2020", id: 7175 },
+      { name: "Octavia > gen 4 2021-", id: 7282 },
+      { name: "Praktik > 2006-2015", id: 7863 },
+      { name: "Rapid > 2012-2019", id: 7393 },
+      { name: "Roomster > 2006-2015", id: 7864 },
+      { name: "Scala > 2019-", id: 7865 },
+      { name: "Superb > 2002-2008", id: 13397 },
+      { name: "Superb > gen 1 2001-2008", id: 12877 },
+      { name: "Superb > gen 2 2009-2015", id: 7215 },
+      { name: "Superb > gen 3 2016-", id: 7190 },
+      { name: "Yeti > 2009-2017", id: 7150 }
+    ]
+  },
+  "Hyundai": {
+    id: 6883,
+    models: [
+      { name: "Accent > gen 3 2005-", id: 7023 },
+      { name: "Amica > 2006-2014", id: 12812 },
+      { name: "Atos >  2001-2014", id: 12810 },
+      { name: "Azera > 2006-2011", id: 12813 },
+      { name: "Azera > 2011-2017", id: 12801 },
+      { name: "Bayon > gen 1 2021-", id: 7701 },
+      { name: "Cee'd > 2016-2021", id: 12558 },
+      { name: "Clarus > 2000-2001", id: 12820 },
+      { name: "Creta > 2020-2023", id: 16751 },
+      { name: "Creta > 2024-", id: 16752 },
+      { name: "Elantra > Gen 4 2005-2009", id: 6962 },
+      { name: "Elantra > gen 5 2010-2014", id: 6928 },
+      { name: "Elantra > gen 6 2015-2019", id: 6956 },
+      { name: "Elantra > gen 7 2020-", id: 7059 },
+      { name: "Forte > 2012-2016", id: 12806 },
+      { name: "Forte > 2016-2018", id: 12562 },
+      { name: "Genesis > gen 1 2008-2013", id: 7362 },
+      { name: "Genesis > gen 2 2014-", id: 7702 },
+      { name: "Genesis-Coupe > 2006-", id: 12825 },
+      { name: "Genesis-Coupe > 2007-2012", id: 12814 },
+      { name: "Getz > 2002-2010", id: 7363 },
+      { name: "H1 > gen 2 2007-", id: 7221 },
+      { name: "H1 Starex Imax > 2009-2019", id: 16836 },
+      { name: "H1 Staria > 2021-", id: 16837 },
+      { name: "H350 > 2014-", id: 7366 },
+      { name: "IONIQ  > 2022-", id: 16838 },
+      { name: "IONIQ > 2016-2023", id: 7372 },
+      { name: "IX45 > 2013-2018", id: 12804 },
+      { name: "IX55 > 2009-2010", id: 12815 },
+      { name: "Kona > gen 1 2017-2022", id: 7161 },
+      { name: "Kona > gen 2 2023-", id: 12871 },
+      { name: "Mentor > 1994-1997", id: 12821 },
+      { name: "Palisade > 2018-", id: 16839 },
+      { name: "Pro Cee'd > 2016-2018", id: 12559 },
+      { name: "Pro-Cee'd > 2012-2016", id: 12805 },
+      { name: "Rio > 2004-", id: 12824 },
+      { name: "Rodius-Turismo > 2018-2021", id: 12808 },
+      { name: "Santa Fe > gen 1 2000-2005", id: 7122 },
+      { name: "Santa Fe > gen 2 2006-2012", id: 6896 },
+      { name: "Santa Fe > gen 3 2013-2017", id: 6965 },
+      { name: "Santa Fe > gen 4 2018-", id: 7704 },
+      { name: "Sedona > 2005-", id: 12819 },
+      { name: "Sedona > 2015-2021", id: 12807 },
+      { name: "Sephia > 2000-2003", id: 12822 },
+      { name: "Sonata > 2017-2019", id: 12556 },
+      { name: "Sonata > gen 5 2004-2009", id: 9359 },
+      { name: "Sonata > gen 6 2010-2014", id: 6980 },
+      { name: "Sonata > gen 7 2015-2018", id: 6998 },
+      { name: "Sonata > gen 8 2019-2023", id: 7705 },
+      { name: "Soul > 2016-2019", id: 12560 },
+      { name: "Spectra > 2003-2009", id: 12823 },
+      { name: "Stargazer > 2022-", id: 16840 },
+      { name: "Suzuki > 2018-", id: 12809 },
+      { name: "Terracan > 2001-2007", id: 12817 },
+      { name: "Tiburon > 2006-2009", id: 12818 },
+      { name: "Trajet > 2000-2008", id: 12811 },
+      { name: "Tucson > 2009-2015", id: 12800 },
+      { name: "Tucson > gen 1 2004-2009", id: 7160 },
+      { name: "Tucson > gen 2 2015-2020", id: 6940 },
+      { name: "Tucson > gen 3 2021-", id: 12554 },
+      { name: "Veloster > gen 1 2011-2017", id: 7412 },
+      { name: "Veloster > gen 2 2018-", id: 7706 },
+      { name: "Venga > 2017-2019", id: 12561 },
+      { name: "Venue > 2020-", id: 16841 },
+      { name: "i10 > gen 1 2007-2013", id: 7369 },
+      { name: "i10 > gen 2 2014-2019", id: 7075 },
+      { name: "i10 > gen 3 2019-", id: 7076 },
+      { name: "i20 > gen 1 2008-2013", id: 7370 },
+      { name: "i20 > gen 2 2014-2019", id: 7010 },
+      { name: "i20 > gen 3 2020-", id: 7703 },
+      { name: "i30 > gen 1 2007-2010", id: 7078 },
+      { name: "i30 > gen 2 2011-2015", id: 7077 },
+      { name: "i30 > gen 3 2016-2023", id: 6938 },
+      { name: "i30 gen 3 > 2016-2023", id: 7446 },
+      { name: "i40 > 2011-2019", id: 7228 },
+      { name: "i40 > 2016-2019", id: 12557 },
+      { name: "i45 > 2009-2014", id: 12802 },
+      { name: "i800 > 2007-2021", id: 12803 },
+      { name: "iLoad > 2010-2021", id: 12798 },
+      { name: "iMax > 2010-2021", id: 12799 },
+      { name: "ix20 > 2010-2019", id: 7373 },
+      { name: "ix25 > 2020-", id: 16750 },
+      { name: "ix35 > 2009-2016", id: 6995 },
+      { name: "ix35 > 2017-", id: 12555 },
+      { name: "ix55 > 2006-2015", id: 7374 }
+    ]
+  },
+  "Kia": {
+    id: 6893,
+    models: [
+      { name: "Carens > gen 2 2006-2011", id: 7334 },
+      { name: "Carens > gen 3 2012-2021", id: 6963 },
+      { name: "Carens > gen 4 2022-", id: 12816 },
+      { name: "Carnival > 2024-", id: 16875 },
+      { name: "Carnival > gen 2 2005-2013", id: 7335 },
+      { name: "Carnival > gen 3 2014-2019", id: 7730 },
+      { name: "Carnival > gen 4 2020-2024", id: 7731 },
+      { name: "Cee'd > gen 1 2006-2011", id: 7336 },
+      { name: "Cee'd > gen 2 2012-2017", id: 7732 },
+      { name: "Cee'd > gen 3 2018-", id: 7337 },
+      { name: "Ceed Sports Wagon > 2018-2022", id: 16876 },
+      { name: "Cerato > 2013-2018", id: 6953 },
+      { name: "Cerato Hatchback > 2019-2024", id: 16877 },
+      { name: "EV6 > 2021-", id: 7733 },
+      { name: "Ev3 > 2024-", id: 16878 },
+      { name: "Forte 5 Gt Hatchback > 2019-2024", id: 16879 },
+      { name: "Kx 1 > 2019-", id: 16880 },
+      { name: "Kx 3 > 2020-", id: 16881 },
+      { name: "Magentis > gen 2 2005-2009", id: 9413 },
+      { name: "Niro > gen 1 2016-2020", id: 7383 },
+      { name: "Niro > gen 2 2021-", id: 12986 },
+      { name: "Opirus > 2003-2011", id: 9366 },
+      { name: "Optima > gen 3 2010-2014", id: 6927 },
+      { name: "Optima > gen 4 2015-2018", id: 7177 },
+      { name: "Optima > gen 5 2019-", id: 7734 },
+      { name: "Picanto > 2023-", id: 16882 },
+      { name: "Picanto > gen 1 2003-2010", id: 9183 },
+      { name: "Picanto > gen 2 2011-2016", id: 6968 },
+      { name: "Picanto > gen 3 2017-2023", id: 6971 },
+      { name: "Pro Cee'd > gen 2 2012-2017", id: 7735 },
+      { name: "Pro Cee'd > gen 3 2018-", id: 7736 },
+      { name: "Rio > gen 2 2005-2010", id: 9316 },
+      { name: "Rio > gen 3 2011-2015", id: 7115 },
+      { name: "Rio > gen 4 2016-", id: 7009 },
+      { name: "Sedona > 2022-", id: 16883 },
+      { name: "Seltos > 2022-", id: 16949 },
+      { name: "Sonet > 2020-", id: 16755 },
+      { name: "Sorento > gen 1 2002-2010", id: 7400 },
+      { name: "Sorento > gen 2 2010-2013", id: 7129 },
+      { name: "Sorento > gen 3 2014-2019", id: 7188 },
+      { name: "Sorento > gen 4 2020-", id: 7737 },
+      { name: "Soul > 2020-", id: 13351 },
+      { name: "Soul > gen 1 2008-2012", id: 7738 },
+      { name: "Soul > gen 2 2013-2018", id: 7401 },
+      { name: "Soul > gen 3 2019-", id: 7130 },
+      { name: "Sportage > gen 2 2004-2009", id: 6892 },
+      { name: "Sportage > gen 3 2010-2015", id: 6990 },
+      { name: "Sportage > gen 4 2015-2020", id: 7015 },
+      { name: "Sportage > gen 5 2020-", id: 7739 },
+      { name: "Stinger > 2017-", id: 7740 },
+      { name: "Stonic > 2017-", id: 7402 },
+      { name: "Telluie > 2020-", id: 16884 },
+      { name: "Venga > 2009-2019", id: 12797 },
+      { name: "Xceed > gen 2 2012-2017", id: 7219 },
+      { name: "Xceed > gen 3 2018-", id: 7338 }
+    ]
+  },
+  "Seat": {
+    id: 6877,
+    models: [
+      { name: "Alhambra > gen 1 1996-2009", id: 8481 },
+      { name: "Alhambra > gen 2 2010-", id: 7309 },
+      { name: "Altea > 2004-2015", id: 7327 },
+      { name: "Arona > 2017-", id: 7330 },
+      { name: "Arosa > 1997-2004", id: 12440 },
+      { name: "Ateca > 2016-2021", id: 7026 },
+      { name: "Ateca > facelift 2022-", id: 7856 },
+      { name: "Exeo > 2008-2013", id: 6876 },
+      { name: "Ibiza > 1999-2002", id: 12419 },
+      { name: "Ibiza > gen 3 2002-2007", id: 8415 },
+      { name: "Ibiza > gen 4 2008-2016", id: 6978 },
+      { name: "Ibiza > gen 5 2017-", id: 7079 },
+      { name: "Leon > gen 2 2005-2013", id: 7090 },
+      { name: "Leon > gen 3 2013-2019", id: 6987 },
+      { name: "Leon > gen 4 2020-", id: 7857 },
+      { name: "Mii > Mii Toate", id: 8428 },
+      { name: "Tarraco > 2018-", id: 7858 },
+      { name: "Toledo > gen 3 2004-2011", id: 9365 },
+      { name: "Toledo > gen 4 2012-2020", id: 7306 }
+    ]
+  },
+  "Fiat": {
+    id: 6879,
+    models: [
+      { name: "500L > 2012-", id: 7185 },
+      { name: "500X > 2014-", id: 7011 },
+      { name: "500c > 2015-2021", id: 7223 },
+      { name: "Aerio > 2001-2007", id: 12448 },
+      { name: "Albea > Albea Toate", id: 7024 },
+      { name: "Brava > 1995-2001", id: 12962 },
+      { name: "Bravo > Bravo Toate", id: 7034 },
+      { name: "Croma > 2005-2010", id: 12480 },
+      { name: "Doblo > gen 1 2000-2009", id: 13011 },
+      { name: "Doblo > gen 2 2010-2021", id: 7056 },
+      { name: "Doblo > gen 3 2022-", id: 7256 },
+      { name: "Ducato > 7 2013-2020", id: 13506 },
+      { name: "Ducato > 8 2021-", id: 12911 },
+      { name: "Ducato > gen 1 2006-2022", id: 7299 },
+      { name: "Ducato > gen 2 2022-", id: 7665 },
+      { name: "Dzire > 2008-2010", id: 12670 },
+      { name: "Element > 2003-2011", id: 12685 },
+      { name: "Ertiga > 2012-2018", id: 12673 },
+      { name: "FR-V > 2007-", id: 12678 },
+      { name: "Fiorino > 2007-2021", id: 7666 },
+      { name: "Fit > 2004-2007", id: 12677 },
+      { name: "Freemont > 2011-2021", id: 7065 },
+      { name: "Fullback > 2016-2019", id: 6939 },
+      { name: "Grand-Vitara > 1998-2015", id: 12671 },
+      { name: "Grand-Vitara > 2005-2015", id: 12477 },
+      { name: "Grande Punto > 2005-2015", id: 7667 },
+      { name: "Ignis > 2002-2015", id: 12417 },
+      { name: "Ignis > 2017-2020", id: 12478 },
+      { name: "Integra > 2006-", id: 12679 },
+      { name: "Legend > 1996-2004", id: 12686 },
+      { name: "Liana > 2002-2007", id: 12674 },
+      { name: "Linea > Linea Toate", id: 12957 },
+      { name: "Logo > 2001-", id: 12680 },
+      { name: "MDX > 2002-", id: 12681 },
+      { name: "Marea > 1996-2002", id: 12428 },
+      { name: "Multipla > 1999-2010", id: 12429 },
+      { name: "NSX > 2006-", id: 12682 },
+      { name: "Panda > gen 2 2003-2010", id: 9327 },
+      { name: "Prelude > 2001-", id: 12683 },
+      { name: "Punto > Punto Toate", id: 7669 },
+      { name: "Qubo > 2007-2021", id: 7670 },
+      { name: "Ridgeline > 2006-2014", id: 12687 },
+      { name: "Ritz > 2009-2011", id: 12669 },
+      { name: "S200 > 2001-2004", id: 12688 },
+      { name: "SX4-S-Cross > 2013-2017", id: 12672 },
+      { name: "Sedici > 2006-2014", id: 12476 },
+      { name: "Shuttle > 1998-2014", id: 12684 },
+      { name: "Stilo > Stilo Toate", id: 7133 },
+      { name: "Stream > 2001-2006", id: 12689 },
+      { name: "Tipo > gen 1 2015-2021", id: 7136 },
+      { name: "Tipo > gen 2 2022-", id: 7405 },
+      { name: "Wagon-R > 1998-2003", id: 12675 },
+      { name: "XL7 > 1998-2006", id: 12676 }
+    ]
+  },
+  "Peugeot": {
+    id: 6908,
+    models: [
+      { name: "1007 > 2004-2009", id: 12872 },
+      { name: "106 > 1991-2003", id: 12410 },
+      { name: "107 > 2005-2014", id: 7953 },
+      { name: "107 > 2005-2015", id: 7250 },
+      { name: "108 > 2014-2021", id: 8732 },
+      { name: "2008 > 2023-", id: 13587 },
+      { name: "2008 > gen 1 2013-2018", id: 12271 },
+      { name: "2008 > gen 2 2019-", id: 12297 },
+      { name: "205 > 1983-1998", id: 12411 },
+      { name: "206 > 1998-2012", id: 12409 },
+      { name: "206 > 1999-2013", id: 9215 },
+      { name: "207 > 2006-2014", id: 7111 },
+      { name: "208 > gen 1 2012-2018", id: 12272 },
+      { name: "208 > gen 2 2019-", id: 12298 },
+      { name: "3008 > gen 1 T84 2007-2015", id: 10388 },
+      { name: "3008 > gen 2 P84 2016-2023", id: 10389 },
+      { name: "301 > 2012-2020", id: 6982 },
+      { name: "306 > 1993-2002", id: 12412 },
+      { name: "307 > 2001-2008", id: 12246 },
+      { name: "308 > gen 1 T7 2007-2014", id: 9367 },
+      { name: "308 > gen 2 T9 2013-2020", id: 6989 },
+      { name: "308 > gen 3 P5 2021-", id: 12951 },
+      { name: "309 > 1985-1999", id: 12413 },
+      { name: "4007 > 2007-2012", id: 6915 },
+      { name: "4008 > 2012-2018", id: 7290 },
+      { name: "405 > 1987-1997", id: 12414 },
+      { name: "406 > 1995-2004", id: 9671 },
+      { name: "407 > 2004-2011", id: 7321 },
+      { name: "408 > 2022-", id: 12952 },
+      { name: "408 GT > 2023-", id: 16913 },
+      { name: "408X > 2023-", id: 16912 },
+      { name: "5008 > gen 1 T87 2009-2016", id: 12273 },
+      { name: "5008 > gen 2 P87 2017-2023", id: 10387 },
+      { name: "508 > gen 1 W23 2010-2017", id: 7014 },
+      { name: "508 > gen 2 R83 2018-2022", id: 12848 },
+      { name: "508 > gen 2 R83 facelift 2023-", id: 12954 },
+      { name: "605 > 1989-1999", id: 12415 },
+      { name: "607 > 1999-2010", id: 7325 },
+      { name: "806 > 1994-2014", id: 12416 },
+      { name: "807 > gen 2 2002-2014", id: 12870 },
+      { name: "Bipper > gen 3 2007-2021", id: 7267 },
+      { name: "Boxer > gen 3 2006-2022", id: 7057 },
+      { name: "Boxer > gen 4 2022-", id: 12953 },
+      { name: "C5 Aircross > 2022-", id: 13588 },
+      { name: "Expert > gen 2 2006-2015", id: 9457 },
+      { name: "Expert > gen 3 2016-", id: 9128 },
+      { name: "Partner > gen 2 2008-2017", id: 12247 },
+      { name: "Partner > gen 3 2018-", id: 12269 },
+      { name: "RCZ > 2009-2015", id: 12242 },
+      { name: "Rifter > gen 3 2018-", id: 12270 },
+      { name: "Traveller > gen 3 2016-", id: 8569 }
+    ]
+  },
+  "Citroen": {
+    id: 6925,
+    models: [
+      { name: "2008 > 2017-2019", id: 12534 },
+      { name: "2008 II > 2019-", id: 12535 },
+      { name: "208 > 2017-2019", id: 12532 },
+      { name: "208 II > 2019-", id: 12533 },
+      { name: "3008 II > 2016-", id: 12538 },
+      { name: "308 II > 2017-2021", id: 12536 },
+      { name: "308 III > 2021-", id: 12537 },
+      { name: "508 > 2017-2018", id: 12539 },
+      { name: "508 II > 2018-", id: 12540 },
+      { name: "Berlingo > 2008-2018", id: 7513 },
+      { name: "Berlingo > 2019-", id: 7264 },
+      { name: "C-Crosser > C-Crosser Toate", id: 7312 },
+      { name: "C-Elisee > C-Elisee Toate", id: 7296 },
+      { name: "C-Zero > C-Zero Toate", id: 12904 },
+      { name: "C1 > gen 1 2005-2013", id: 7258 },
+      { name: "C1 > gen 2 2014-", id: 8731 },
+      { name: "C2 > C2 Toate", id: 12249 },
+      { name: "C3 > gen 1 2002-2008", id: 12250 },
+      { name: "C3 > gen 2 2009-2015", id: 12774 },
+      { name: "C3 > gen 3 2016-", id: 7269 },
+      { name: "C3 Aircross > gen 1 2017-2023", id: 12847 },
+      { name: "C3 Aircross > gen 2 2024-", id: 12903 },
+      { name: "C3 Picasso > C3 Picasso Toate", id: 12772 },
+      { name: "C4 > 2017-2018", id: 12543 },
+      { name: "C4 > gen 1 2004-2009", id: 6924 },
+      { name: "C4 > gen 2 2010-2019", id: 7036 },
+      { name: "C4 > gen 3 2020-", id: 12907 },
+      { name: "C4 >2020-", id: 12544 },
+      { name: "C4 AirCross > C4 AirCross Toate", id: 8320 },
+      { name: "C4 Cactus > facelift 2018-", id: 12530 },
+      { name: "C4 Cactus > gen 1 2014-2017", id: 12897 },
+      { name: "C4 Picasso > 2017-", id: 12545 },
+      { name: "C4 Picasso > gen 1 2006-2013", id: 12773 },
+      { name: "C4 Picasso > gen 2 2014-2022", id: 12846 },
+      { name: "C4 X > 2022-", id: 12546 },
+      { name: "C5 > gen 1 2001-2006", id: 9386 },
+      { name: "C5 > gen 2 2007-2020", id: 7196 },
+      { name: "C5 > gen 3 2021-", id: 12908 },
+      { name: "C5 Aircross > gen 1 2017-", id: 7326 },
+      { name: "C5 X > 2022-", id: 12547 },
+      { name: "C5X > 2016-", id: 13339 },
+      { name: "C5X > 2021-2022", id: 16825 },
+      { name: "C6 > C6 Toate", id: 12770 },
+      { name: "C8 > C8 Toate", id: 12771 },
+      { name: "DS3 > gen 1 2009-2017", id: 9646 },
+      { name: "DS3 > gen 2 2018-2021", id: 12905 },
+      { name: "DS3 Crossback > 2018-", id: 12548 },
+      { name: "DS4 > gen 1 2010-2020", id: 12890 },
+      { name: "DS4 > gen 2 2021-", id: 12531 },
+      { name: "DS5 > 2011-2018", id: 10400 },
+      { name: "DS6 > 2015-2019", id: 16826 },
+      { name: "DS7 > 2017-2022", id: 13338 },
+      { name: "DS7 > 2022-", id: 16827 },
+      { name: "DS7 Crossback > 2017-2022", id: 12549 },
+      { name: "DS9 > 2020-2022", id: 12550 },
+      { name: "Dispatch > 2017-", id: 12529 },
+      { name: "Jumper > gen 3 2006-2022", id: 7313 },
+      { name: "Jumper > gen 4 2022-", id: 12857 },
+      { name: "Jumpy > gen 2 2006-2015", id: 8768 },
+      { name: "Jumpy > gen 3 2016-", id: 12295 },
+      { name: "Nemo > Nemo Toate", id: 9298 },
+      { name: "ProAce City > 2020-", id: 12541 },
+      { name: "ProAce Verso > 2016-", id: 12542 },
+      { name: "SpaceTourer > gen 3 2016-", id: 12296 }
+    ]
+  },
+  "Honda": {
+    id: 6898,
+    models: [
+      { name: "Accord > 1993-1998", id: 9060 },
+      { name: "Accord > 2013-", id: 7692 },
+      { name: "Accord > 2019-2022", id: 16538 },
+      { name: "Accord > 2023-2025", id: 16832 },
+      { name: "Accord > gen 7 2002-2007", id: 7191 },
+      { name: "Accord > gen 8 2008-2011", id: 7019 },
+      { name: "Amaze > 2013-2018", id: 12662 },
+      { name: "BR-V > 2020-", id: 16834 },
+      { name: "Ballade > 2011-2013", id: 12690 },
+      { name: "Brio > 2012-2018", id: 12693 },
+      { name: "Brio > 2021-", id: 16833 },
+      { name: "CR-V > 2009-2011", id: 12668 },
+      { name: "CR-V > gen 2 2002-2005", id: 7696 },
+      { name: "CR-V > gen 3 2006-2010", id: 6897 },
+      { name: "CR-V > gen 4 2011-2015", id: 7182 },
+      { name: "CR-V > gen 5 2016-2021", id: 7047 },
+      { name: "CR-V > gen 5 2023-", id: 13391 },
+      { name: "CR-V > gen 6 2022-", id: 7697 },
+      { name: "CR-Z > 2010-2016", id: 7345 },
+      { name: "City > 2008-2013", id: 12663 },
+      { name: "City > 2014-2019", id: 12568 },
+      { name: "City > Hatchback RS 2021-", id: 16749 },
+      { name: "Civic > 2001-2011", id: 9061 },
+      { name: "Civic > 2012-2016", id: 12664 },
+      { name: "Civic > 2016-2021", id: 12569 },
+      { name: "Civic > 2021-", id: 13390 },
+      { name: "Civic Hatchback > 2020-", id: 13349 },
+      { name: "Civic Hatchback Type C > 2017 - 2022", id: 13348 },
+      { name: "Civic Hatchback Type R > gen 7 2007-2014", id: 7074 },
+      { name: "Civic Hatchback Type R > gen 8 2015-2021", id: 7693 },
+      { name: "Civic Hatchback Type R > gen 9 2022-", id: 7694 },
+      { name: "Civic Hybrid > 2005-2012", id: 12695 },
+      { name: "Civic Sedan > gen 10 2015-2020", id: 7695 },
+      { name: "Civic Sedan > gen 8 2005-2010", id: 7158 },
+      { name: "Civic Sedan > gen 9 2011-2014", id: 6948 },
+      { name: "Civic-Tourer > 2014-2015", id: 12691 },
+      { name: "CrossTour > 2010 - 2016", id: 13365 },
+      { name: "CrossTour > 2010-2016", id: 12694 },
+      { name: "Elysion > 2016-", id: 16745 },
+      { name: "FR-V > 2004-2009", id: 7360 },
+      { name: "Fit > 2008-2013", id: 12299 },
+      { name: "Fit > 2013-2020", id: 12692 },
+      { name: "Fit > 2020 -", id: 13347 },
+      { name: "Fit-Aria > 2008-2014", id: 12665 },
+      { name: "Freed > 2016 - 2019", id: 13360 },
+      { name: "HR-V > 2022-", id: 13346 },
+      { name: "HR-V > HR-V Toate", id: 7367 },
+      { name: "Insight > gen 2 2009-2017", id: 7081 },
+      { name: "Insight > gen 3 2018-", id: 7698 },
+      { name: "Jazz > 2016-2019", id: 12570 },
+      { name: "Jazz > gen 2 2007-2012", id: 7699 },
+      { name: "Jazz > gen 3 2013-2019", id: 7357 },
+      { name: "Jazz > gen 4 2020-", id: 7700 },
+      { name: "M-NV > 2019-", id: 16746 },
+      { name: "MR-V > 2008", id: 12666 },
+      { name: "Odyssey > 2014-2020", id: 13362 },
+      { name: "Odyssey > 2021-", id: 16744 },
+      { name: "Odyssey > Odyssey Toate", id: 8913 },
+      { name: "Pilot > 2008-2013", id: 12667 },
+      { name: "Ridgeline > 2016-2021", id: 12571 },
+      { name: "S 2000 > 1999-2009", id: 10284 },
+      { name: "S200 > 2005-2009", id: 12696 },
+      { name: "Shuttle > 2015-", id: 16748 },
+      { name: "WRV > 2021-", id: 16835 },
+      { name: "XR-V > XR-V Toate", id: 8895 },
+      { name: "ZR-V > 2022-", id: 16747 }
+    ]
+  },
+  "Nissan": {
+    id: 6994,
+    models: [
+      { name: "350Z > 2002-2008", id: 9152 },
+      { name: "370Z > 2008-2011", id: 7320 },
+      { name: "370Z > 2012-2020", id: 7808 },
+      { name: "Almera > 2000-2010", id: 9109 },
+      { name: "Armada > 2017-2023", id: 16910 },
+      { name: "Elgrand > E52 2010 -2018", id: 13333 },
+      { name: "Evalia > 2009-2022", id: 12859 },
+      { name: "GTR > 2009-2023", id: 7809 },
+      { name: "Interstar > 2010-", id: 7810 },
+      { name: "Juke > gen 1 F15 2010-2018", id: 7084 },
+      { name: "Juke > gen 2 F16 2019-", id: 7811 },
+      { name: "KICKS > 2017-2023", id: 16763 },
+      { name: "Kicks > 2024-", id: 16911 },
+      { name: "Leaf > 2018-2024", id: 13392 },
+      { name: "Leaf > gen 1 ZEo/AZEo 2010-2016", id: 12447 },
+      { name: "March > 1993-1998", id: 12940 },
+      { name: "Micra > 1993-1998", id: 12941 },
+      { name: "Micra > gen 3 K12 2002-2010", id: 7379 },
+      { name: "Micra > gen 4 K13 2010-2015", id: 7380 },
+      { name: "Micra > gen 5 K14 2016-", id: 7094 },
+      { name: "Murano > gen 1 Z50 2002-2006", id: 7381 },
+      { name: "Murano > gen 2 Z51 2007-2013", id: 7382 },
+      { name: "Murano > gen 3 Z52 2014-", id: 7812 },
+      { name: "NV*** > 2007-2023", id: 7260 },
+      { name: "Navara > gen 2 D40 2004-2013", id: 7107 },
+      { name: "Navara > gen 3 D23 2014-", id: 7108 },
+      { name: "Note > gen 1 E11 2004-2011", id: 12650 },
+      { name: "Note > gen 2 E12 2012-2019", id: 7281 },
+      { name: "Note > gen 3 E13 2020-", id: 7813 },
+      { name: "Paladin > 2023-", id: 16766 },
+      { name: "Pathfinder > gen 3 R51 2004-2011", id: 7814 },
+      { name: "Pathfinder > gen 4 R52 2012-2021", id: 7815 },
+      { name: "Pathfinder > gen 5 R53 2022-", id: 7816 },
+      { name: "Patrol > gen 5 Y61 1997-2009", id: 7817 },
+      { name: "Patrol > gen 6 Y62 2010-2023", id: 7384 },
+      { name: "Primastar > 2001-2014", id: 13401 },
+      { name: "Primera > gen 3 P12 2001-2009", id: 7818 },
+      { name: "Pulsar > C13 2014-2019", id: 7387 },
+      { name: "Qashqai > gen 1 J10 2006-2012", id: 7005 },
+      { name: "Qashqai > gen 2 J11 2013-2020", id: 7512 },
+      { name: "Qashqai > gen 3 J12 2021-", id: 7819 },
+      { name: "Rogue > 2015 - 2018", id: 13334 },
+      { name: "Rogue Sport > 2015 - 2018", id: 13335 },
+      { name: "Serena > 2014-2017", id: 16764 },
+      { name: "Serena > 2018-", id: 16765 },
+      { name: "Terano > Terano Toate", id: 7820 },
+      { name: "Terra > 2018-2021", id: 16768 },
+      { name: "Terra > 2022-", id: 16767 },
+      { name: "Tiida > gen 1 C11 2004-2010", id: 7821 },
+      { name: "X-Trail > gen 1 T30 2000-2006", id: 7288 },
+      { name: "X-Trail > gen 2 T31 2007-2012", id: 7154 },
+      { name: "X-Trail > gen 3 T32 2013-2020", id: 7822 },
+      { name: "X-Trail > gen 4 T33 2021-", id: 7823 }
+    ]
+  },
+  "Mazda": {
+    id: 6900,
+    models: [
+      { name: "2 > gen 2 2007-2013", id: 7377 },
+      { name: "2 > gen 3 2014-", id: 7772 },
+      { name: "2 Hatchback > 2015-2019", id: 16888 },
+      { name: "3 > gen 1 2003-2007", id: 6957 },
+      { name: "3 > gen 2 2008-2012", id: 6906 },
+      { name: "3 > gen 3 2013-2018", id: 7004 },
+      { name: "3 > gen 4 2019-", id: 7773 },
+      { name: "3 Hatchback > 2010-2013", id: 16889 },
+      { name: "323 > 323 Toate", id: 7776 },
+      { name: "5 > gen 2 2005-2009", id: 7774 },
+      { name: "5 > gen 3 2010-2018", id: 7775 },
+      { name: "6 > gen 1 2002-2006", id: 7022 },
+      { name: "6 > gen 2 2007-2011", id: 6899 },
+      { name: "6 > gen 3 2012-", id: 6972 },
+      { name: "6 Hatchback > 2016-", id: 16890 },
+      { name: "6 Wagon > 2013-2022", id: 16891 },
+      { name: "B Series > B Series Toate", id: 7777 },
+      { name: "BT-50 > BT-50 Toate", id: 7113 },
+      { name: "CX-3 > 2014-", id: 7778 },
+      { name: "CX-3 > 2019-", id: 16757 },
+      { name: "CX-30 > 2019-", id: 7779 },
+      { name: "CX-4 > 2016-", id: 13370 },
+      { name: "CX-5 > gen 1 2012-2016", id: 7169 },
+      { name: "CX-5 > gen 2 2017-", id: 7050 },
+      { name: "CX-50 > 2023-", id: 16892 },
+      { name: "CX-60 > 2022-", id: 7780 },
+      { name: "CX-7 > 2006-2012", id: 6933 },
+      { name: "CX-70 > 2025-", id: 16893 },
+      { name: "CX-8 > 2019-", id: 16894 },
+      { name: "CX-9 > gen 1 2006-2015", id: 7273 },
+      { name: "CX-9 > gen 2 2016-", id: 7781 },
+      { name: "CX-90 > 2024-", id: 16895 },
+      { name: "MPV > gen 3 2006-", id: 9518 },
+      { name: "MX-30 > 2020-", id: 7782 },
+      { name: "MX-5 > MX-5 Toate", id: 9213 },
+      { name: "Premacy > gen 2 2005-2009", id: 12257 },
+      { name: "Premacy > gen 3 2010-", id: 7783 },
+      { name: "RX-8 > 2003-2008", id: 7397 },
+      { name: "RX-8 > 2008-2011", id: 7398 }
+    ]
+  },
+  "Volvo": {
+    id: 6960,
+    models: [
+      { name: "740 > 1984-1992", id: 12365 },
+      { name: "760 > 1982-1990", id: 12366 },
+      { name: "940 > 1990-1998", id: 12367 },
+      { name: "960 > 1990-1996", id: 12368 },
+      { name: "C30 > 2006-2013", id: 12251 },
+      { name: "C70 > 2001-2005", id: 12522 },
+      { name: "C70 > 2006-2013", id: 12252 },
+      { name: "S40 > 2000-2003", id: 12524 },
+      { name: "S40 > 2008-2012", id: 12853 },
+      { name: "S40/V40 > 2004-2012", id: 9046 },
+      { name: "S60 > 2006-2016", id: 12510 },
+      { name: "S60/V60 > gen 1 2001-2009", id: 12300 },
+      { name: "S60/V60 > gen 2 2010-2017", id: 7118 },
+      { name: "S60/V60 > gen 3 2018-", id: 7938 },
+      { name: "S70 > 1997-2000", id: 12525 },
+      { name: "S80 > 2006-2009", id: 12509 },
+      { name: "S80 > gen 1 1998-2006", id: 7119 },
+      { name: "S80 > gen 2 2006-2016", id: 12258 },
+      { name: "S90/V90 > 2016-", id: 7939 },
+      { name: "V40 > 2001-2003", id: 12527 },
+      { name: "V40 > 2004-2012", id: 7940 },
+      { name: "V40 > 2012-2017", id: 12852 },
+      { name: "V50 > 2004-2012", id: 12253 },
+      { name: "V50 > 2006-2013", id: 12511 },
+      { name: "V60 Cross Country > 2016-2017", id: 12854 },
+      { name: "V70 > 2001-2008", id: 12526 },
+      { name: "V70 > gen 1 2000-2007", id: 12301 },
+      { name: "V70 > gen 2 2008-2016", id: 12259 },
+      { name: "V80 > 1998-2006", id: 12528 },
+      { name: "XC40 > 2018-", id: 7503 },
+      { name: "XC60 > gen 1 2008-2016", id: 6981 },
+      { name: "XC60 > gen 2 2017-", id: 7941 },
+      { name: "XC70 > 2001-2007", id: 12523 },
+      { name: "XC70 > gen 2 2008-2016", id: 12260 },
+      { name: "XC90 > 2006-2014", id: 12512 },
+      { name: "XC90 > gen 1 2002-2014", id: 6959 },
+      { name: "XC90 > gen 2 2015-", id: 7501 }
+    ]
+  }
+};
+
+// ─── CATEGORIES ───────────────────────────────────────────────────
+const CATEGORIES = [
+  {
+    icon: "🗺️",
+    name: "Navigație dedicată",
+    desc: "Sisteme multimedia OEM",
+    urlTpl: "https://www.edotec.ro/navigatie-dedicata.html?marca[0]={marca_id}&model[0]={model_id}"
+  },
+  {
+    icon: "🔊",
+    name: "Audio & Difuzoare",
+    desc: "Car audio, ampli, subwoofere",
+    urlTpl: "https://www.edotec.ro/car-audio.html?marca[0]={marca_id}&model[0]={model_id}"
+  },
+  {
+    icon: "🚨",
+    name: "Alarmă auto",
+    desc: "Sisteme de securitate",
+    urlTpl: "https://www.edotec.ro/alarme-auto-si-securitate.html?marca[0]={marca_id}&model[0]={model_id}"
+  },
+  {
+    icon: "🔑",
+    name: "Pornire motor",
+    desc: "Telecomandă & start/stop",
+    urlTpl: "https://www.edotec.ro/pornire-motor.html?marca[0]={marca_id}&model[0]={model_id}"
+  },
+  {
+    icon: "💡",
+    name: "Lumini ambientale",
+    desc: "Confort & ambientare",
+    urlTpl: "https://www.edotec.ro/confort.html?marca[0]={marca_id}&model[0]={model_id}"
+  },
+  {
+    icon: "📦",
+    name: "Portbagaj electric",
+    desc: "Deschidere automată",
+    urlTpl: "https://www.edotec.ro/confort.html?marca[0]={marca_id}&model[0]={model_id}"
+  },
+  {
+    icon: "🔇",
+    name: "Insonorizare",
+    desc: "Materiale fonoabsorbante",
+    urlTpl: "https://edotec-configurator.netlify.app"
+  },
+  {
+    icon: "📷",
+    name: "Cameră & Parking",
+    desc: "Camere față/spate, senzori",
+    urlTpl: "https://www.edotec.ro/asistenta-parcare.html?marca[0]={marca_id}&model[0]={model_id}"
+  }
+];
+
+// ─── STATE ────────────────────────────────────────────────────────
+let selectedBrandId = null;
+let selectedModelId = null;
+let selectedBrandName = "";
+let selectedModelName = "";
+
+// ─── INIT ─────────────────────────────────────────────────────────
+const brandSelect = document.getElementById("brandSelect");
+const modelSelect = document.getElementById("modelSelect");
+const btnFind = document.getElementById("btnFind");
+
+// Populate brands
+const sortedBrands = Object.keys(VEHICLE_DATA).sort();
+sortedBrands.forEach(brand => {
+  const opt = document.createElement("option");
+  opt.value = brand;
+  opt.textContent = brand;
+  brandSelect.appendChild(opt);
+});
+
+// Brand change → populate models
+brandSelect.addEventListener("change", function() {
+  const brand = this.value;
+  modelSelect.innerHTML = '<option value="">— Selectează modelul —</option>';
+  modelSelect.disabled = true;
+  btnFind.disabled = true;
+  selectedBrandId = null;
+  selectedModelId = null;
+
+  if (brand && VEHICLE_DATA[brand]) {
+    const data = VEHICLE_DATA[brand];
+    selectedBrandId = data.id;
+    selectedBrandName = brand;
+    
+    data.models.forEach(model => {
+      const opt = document.createElement("option");
+      opt.value = model.id;
+      opt.textContent = model.name;
+      modelSelect.appendChild(opt);
+    });
+    modelSelect.disabled = false;
+  }
+});
+
+// Model change → enable button
+modelSelect.addEventListener("change", function() {
+  const val = this.value;
+  if (val) {
+    selectedModelId = parseInt(val);
+    selectedModelName = this.options[this.selectedIndex].textContent;
+    btnFind.disabled = false;
+  } else {
+    selectedModelId = null;
+    btnFind.disabled = true;
+  }
+});
+
+// ─── SHOW RESULTS ─────────────────────────────────────────────────
+function showResults() {
+  if (!selectedBrandId || !selectedModelId) return;
+
+  // Update result title
+  document.getElementById("resultVehicle").textContent = selectedBrandName + " " + selectedModelName;
+
+  // Build categories grid
+  const grid = document.getElementById("categoriesGrid");
+  grid.innerHTML = "";
+  
+  CATEGORIES.forEach(cat => {
+    const url = cat.urlTpl
+      .replace("{marca_id}", selectedBrandId)
+      .replace("{model_id}", selectedModelId);
+    
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.className = "category-card";
+    a.innerHTML = `
+      <span class="category-icon">${cat.icon}</span>
+      <div class="category-name">${cat.name}</div>
+      <div class="category-desc">${cat.desc}</div>
+    `;
+    grid.appendChild(a);
+  });
+
+  // Show results, hide selector
+  const resultsEl = document.getElementById("results");
+  resultsEl.style.display = "block";
+  resultsEl.classList.remove("fade-in");
+  void resultsEl.offsetWidth; // reflow
+  resultsEl.classList.add("fade-in");
+  
+  document.getElementById("selectorCard").style.display = "none";
+  
+  // Scroll to results
+  resultsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// ─── RESET ────────────────────────────────────────────────────────
+function resetSelection() {
+  // Reset state
+  selectedBrandId = null;
+  selectedModelId = null;
+  selectedBrandName = "";
+  selectedModelName = "";
+  
+  // Reset dropdowns
+  brandSelect.value = "";
+  modelSelect.innerHTML = '<option value="">— Selectează modelul —</option>';
+  modelSelect.disabled = true;
+  btnFind.disabled = true;
+  
+  // Show selector, hide results
+  document.getElementById("selectorCard").style.display = "block";
+  document.getElementById("results").style.display = "none";
+  
+  // Scroll up
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// Allow Enter key to trigger search
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && !btnFind.disabled) {
+    showResults();
+  }
+});
+</script>
+
+</body>
+</html>
