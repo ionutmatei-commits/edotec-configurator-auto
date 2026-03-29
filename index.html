@@ -88,6 +88,28 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#1a1a1a;color:#fff;min-h
 .loader.active{display:block}
 .spinner{width:40px;height:40px;border:3px solid #333;border-top-color:#d63031;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* Inactive category cards */
+.cat-card.inactive{opacity:0.35;cursor:not-allowed;pointer-events:none}
+.cat-card.inactive:hover{background:#222;border-color:transparent;transform:none}
+.cat-card .unavail-text{display:none;font-size:.72rem;color:#888;margin-top:5px}
+.cat-card.inactive .unavail-text{display:block}
+
+/* Intermediary screens (audio, pornire) */
+.clarif-screen{max-width:800px;margin:0 auto}
+.clarif-screen h2{font-size:1.5rem;text-align:center;margin-bottom:8px;color:#fff}
+.clarif-screen .subtitle{text-align:center;color:#aaa;font-size:.95rem;margin-bottom:32px}
+.clarif-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:30px}
+.clarif-cards.two-col{grid-template-columns:repeat(2,1fr);max-width:500px;margin:0 auto 30px}
+@media(max-width:600px){.clarif-cards{grid-template-columns:1fr;gap:14px}.clarif-cards.two-col{grid-template-columns:1fr}}
+.clarif-card{background:#222;border-radius:14px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .22s;border:2px solid transparent}
+.clarif-card:hover{background:#2a2a2a;border-color:#d63031;transform:translateY(-3px)}
+.clarif-card .c-icon{font-size:2.8rem;margin-bottom:12px;display:block}
+.clarif-card .c-title{font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:8px}
+.clarif-card .c-desc1{font-size:.82rem;color:#888;margin-bottom:6px}
+.clarif-card .c-desc2{font-size:.8rem;color:#666;font-style:italic}
+.clarif-back{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.info-banner{background:#2a1f1f;border:1px solid #5a2020;border-radius:8px;padding:12px 16px;color:#e88;font-size:.88rem;margin-bottom:18px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -191,38 +213,84 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#1a1a1a;color:#fff;min-h
   <div id="screen2" class="screen">
     <button class="back-btn" onclick="goTo(1)">← Alege altă mașină</button>
     <div id="bc2" class="breadcrumb"></div>
-    <div class="cat-grid">
-      <div class="cat-card" onclick="goToProducts('navigatii')">
-        <span class="icon">🗺️</span>
-        <div class="label">Navigație<small>GPS dedicat</small></div>
+    <div id="cat-grid" class="cat-grid">
+      <!-- Generated dynamically by renderCategoryHub() -->
+    </div>
+  </div>
+
+  <!-- SCREEN 2b: Audio clarification -->
+  <div id="screen2b" class="screen">
+    <div class="clarif-back">
+      <button class="back-btn" onclick="goTo(2)">← Categorii</button>
+    </div>
+    <div class="clarif-screen">
+      <h2>🔊 Ce sistem audio are mașina ta?</h2>
+      <p class="subtitle">Alege tipul de sistem pentru a vedea produsele potrivite</p>
+      <div class="clarif-cards">
+        <div class="clarif-card" onclick="goToAudioProducts('standard')">
+          <span class="c-icon">🔈</span>
+          <div class="c-title">STANDARD</div>
+          <div class="c-desc1">Fără tweeter în ușă</div>
+          <div class="c-desc2">"Difuzoare coaxiale simple"</div>
+        </div>
+        <div class="clarif-card" onclick="goToAudioProducts('hifi')">
+          <span class="c-icon">🔉</span>
+          <div class="c-title">HI-FI</div>
+          <div class="c-desc1">Tweeter mic în colțul ușii</div>
+          <div class="c-desc2">"Sistem cu tweeter separat"</div>
+        </div>
+        <div class="clarif-card" onclick="goToAudioProducts('premium')">
+          <span class="c-icon">🔊</span>
+          <div class="c-title">PREMIUM</div>
+          <div class="c-desc1">Logo Bose/Harman/JBL pe difuzor</div>
+          <div class="c-desc2">"Sistem audio premium de fabrică"</div>
+        </div>
       </div>
-      <div class="cat-card" onclick="goToProducts('audio')">
-        <span class="icon">🔊</span>
-        <div class="label">Audio<small>Difuzoare, amplificatoare</small></div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2c: Pornire motor — cheie/buton -->
+  <div id="screen2c" class="screen">
+    <div class="clarif-back">
+      <button class="back-btn" onclick="goTo(2)">← Categorii</button>
+    </div>
+    <div class="clarif-screen">
+      <h2>🔑 Cum pornește mașina ta?</h2>
+      <p class="subtitle">Alege tipul de pornire</p>
+      <div class="clarif-cards two-col">
+        <div class="clarif-card" onclick="selectPornireStart('cheie')">
+          <span class="c-icon">🗝️</span>
+          <div class="c-title">CU CHEIE</div>
+          <div class="c-desc1">Răsucire contact</div>
+        </div>
+        <div class="clarif-card" onclick="selectPornireStart('buton')">
+          <span class="c-icon">🔘</span>
+          <div class="c-title">CU BUTON</div>
+          <div class="c-desc1">Start/Stop</div>
+        </div>
       </div>
-      <div class="cat-card" onclick="goToProducts('alarme')">
-        <span class="icon">🔒</span>
-        <div class="label">Alarmă<small>Sisteme de securitate</small></div>
-      </div>
-      <div class="cat-card" onclick="goToProducts('pornire')">
-        <span class="icon">🔑</span>
-        <div class="label">Pornire motor<small>Start de la distanță</small></div>
-      </div>
-      <div class="cat-card" onclick="goToProducts('ambientale')">
-        <span class="icon">✨</span>
-        <div class="label">Ambientale<small>Lumini LED interior</small></div>
-      </div>
-      <div class="cat-card" onclick="goToProducts('portbagaj')">
-        <span class="icon">🚪</span>
-        <div class="label">Portbagaj<small>Ridicare electrică</small></div>
-      </div>
-      <div class="cat-card" onclick="goToProducts('insonorizare')">
-        <span class="icon">🎵</span>
-        <div class="label">Insonorizare<small>Materiale fonoabsorbante</small></div>
-      </div>
-      <div class="cat-card" onclick="goToProducts('camere')">
-        <span class="icon">📷</span>
-        <div class="label">Cameră<small>Marsarier și parcare</small></div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2d: Pornire motor — cutie viteze -->
+  <div id="screen2d" class="screen">
+    <div class="clarif-back">
+      <button class="back-btn" onclick="showScreen('screen2c')">← Înapoi</button>
+    </div>
+    <div class="clarif-screen">
+      <h2>⚙️ Ce tip de cutie are mașina?</h2>
+      <p class="subtitle">Alege tipul de transmisie</p>
+      <div class="clarif-cards two-col">
+        <div class="clarif-card" onclick="goToPornireProducts('manuala')">
+          <span class="c-icon">🅼</span>
+          <div class="c-title">MANUALĂ</div>
+          <div class="c-desc1">Cutie cu schimb manual</div>
+        </div>
+        <div class="clarif-card" onclick="goToPornireProducts('automata')">
+          <span class="c-icon">🅰️</span>
+          <div class="c-title">AUTOMATĂ</div>
+          <div class="c-desc1">Cutie automată / DSG</div>
+        </div>
       </div>
     </div>
   </div>
@@ -254,7 +322,8 @@ let state = {
   modelId: null, modelName: null,
   catKey: null, catName: null,
   displayedCount: 0,
-  currentItems: []
+  currentItems: [],
+  pornireStart: null  // 'cheie' | 'buton'
 };
 
 const CAT_NAMES = {
@@ -273,6 +342,175 @@ function goTo(n) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen'+n).classList.add('active');
   window.scrollTo(0,0);
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ─── Category availability check ─────────────────────────────────────
+function hasCategoryProducts(marcaId, modelId, category) {
+  const catData = PRODUCTS[category];
+  if (!catData) return false;
+  if (catData[marcaId] && catData[marcaId][modelId] && catData[marcaId][modelId].length > 0) return true;
+  if (catData['universal'] && catData['universal'].length > 0) return true;
+  if (catData[marcaId] && catData[marcaId]['universal'] && catData[marcaId]['universal'].length > 0) return true;
+  return false;
+}
+
+// ─── Render category hub with active/inactive ─────────────────────────
+function renderCategoryHub() {
+  const cats = [
+    { key: 'navigatii', icon: '🗺️', label: 'Navigație', sub: 'GPS dedicat' },
+    { key: 'audio',     icon: '🔊', label: 'Audio',     sub: 'Difuzoare, amplificatoare' },
+    { key: 'alarme',    icon: '🔒', label: 'Alarmă',    sub: 'Sisteme de securitate' },
+    { key: 'pornire',   icon: '🔑', label: 'Pornire motor', sub: 'Start de la distanță' },
+    { key: 'ambientale',icon: '✨', label: 'Ambientale', sub: 'Lumini LED interior' },
+    { key: 'portbagaj', icon: '🚪', label: 'Portbagaj',  sub: 'Ridicare electrică' },
+    { key: 'insonorizare',icon:'🎵',label:'Insonorizare',sub: 'Materiale fonoabsorbante' },
+    { key: 'camere',    icon: '📷', label: 'Cameră',     sub: 'Marsarier și parcare' }
+  ];
+  const grid = document.getElementById('cat-grid');
+  grid.innerHTML = '';
+  cats.forEach(c => {
+    const hasProducts = hasCategoryProducts(state.marcaId, state.modelId, c.key);
+    const card = document.createElement('div');
+    card.className = 'cat-card' + (hasProducts ? '' : ' inactive');
+    card.innerHTML =
+      '<span class="icon">' + c.icon + '</span>' +
+      '<div class="label">' + escHtml(c.label) +
+        '<small>' + escHtml(c.sub) + '</small>' +
+        '<span class="unavail-text">Indisponibil pentru această mașină</span>' +
+      '</div>';
+    if (hasProducts) {
+      card.addEventListener('click', function() { startCategory(c.key); });
+    }
+    grid.appendChild(card);
+  });
+}
+
+// Entry point when clicking a category card
+function startCategory(catKey) {
+  if (catKey === 'audio') {
+    showScreen('screen2b');
+  } else if (catKey === 'pornire') {
+    state.pornireStart = null;
+    showScreen('screen2c');
+  } else {
+    goToProducts(catKey);
+  }
+}
+
+// ─── Audio clarification ──────────────────────────────────────────────
+function goToAudioProducts(audioType) {
+  // Build item list, then filter by audioType
+  state.catKey = 'audio';
+  state.catName = CAT_NAMES['audio'];
+
+  const catData = PRODUCTS['audio'] || {};
+  const modelData = (catData[state.marcaId] && catData[state.marcaId][state.modelId]) ? catData[state.marcaId][state.modelId] : [];
+  const marcaUniversal = (catData[state.marcaId] && catData[state.marcaId]['universal']) ? catData[state.marcaId]['universal'] : [];
+  const globalUniversal = (catData['universal'] && catData['universal']['universal']) ? catData['universal']['universal'] : [];
+
+  const dedicated = modelData.map(p => ({...p, _badge:'dedicated'}));
+  const universal = [...marcaUniversal, ...globalUniversal]
+    .filter((p,i,arr) => arr.findIndex(x => x.id === p.id) === i)
+    .map(p => ({...p, _badge:'universal'}));
+  const dedicatedIds = new Set(dedicated.map(p=>p.id));
+  const universalFiltered = universal.filter(p => !dedicatedIds.has(p.id));
+  let allItems = [...dedicated, ...universalFiltered];
+
+  // Filter by audioType via name keywords
+  if (audioType === 'hifi') {
+    // component / tweeter / hi-fi keyword filter — show component sets + coaxiale premium
+    const keywords = ['component', 'tweeter', 'hi-fi', 'hifi', 'split'];
+    const filtered = allItems.filter(p => keywords.some(k => p.name && p.name.toLowerCase().includes(k)));
+    allItems = filtered.length > 0 ? filtered : allItems; // fallback: show all if no match
+  } else if (audioType === 'premium') {
+    // DSP + high-end / premium systems
+    const keywords = ['dsp', 'amplificator', 'procesor', 'bose', 'harman', 'jbl', 'premium', 'high-end', 'highend'];
+    const filtered = allItems.filter(p => keywords.some(k => p.name && p.name.toLowerCase().includes(k)));
+    allItems = filtered.length > 0 ? filtered : allItems;
+  }
+  // STANDARD → all products (no filter)
+
+  const audioLabels = { standard: 'Standard', hifi: 'Hi-Fi', premium: 'Premium' };
+  prepareProductsScreen(allItems, 'audio', 'Sistem ' + (audioLabels[audioType] || audioType));
+}
+
+// ─── Pornire motor clarification ─────────────────────────────────────
+function selectPornireStart(type) {
+  state.pornireStart = type;
+  showScreen('screen2d');
+}
+
+function goToPornireProducts(cutieType) {
+  state.catKey = 'pornire';
+  state.catName = CAT_NAMES['pornire'];
+
+  const catData = PRODUCTS['pornire'] || {};
+  const modelData = (catData[state.marcaId] && catData[state.marcaId][state.modelId]) ? catData[state.marcaId][state.modelId] : [];
+  const marcaUniversal = (catData[state.marcaId] && catData[state.marcaId]['universal']) ? catData[state.marcaId]['universal'] : [];
+  const globalUniversal = (catData['universal'] && catData['universal']['universal']) ? catData['universal']['universal'] : [];
+
+  const dedicated = modelData.map(p => ({...p, _badge:'dedicated'}));
+  const universal = [...marcaUniversal, ...globalUniversal]
+    .filter((p,i,arr) => arr.findIndex(x => x.id === p.id) === i)
+    .map(p => ({...p, _badge:'universal'}));
+  const dedicatedIds = new Set(dedicated.map(p=>p.id));
+  const universalFiltered = universal.filter(p => !dedicatedIds.has(p.id));
+  let allItems = [...dedicated, ...universalFiltered];
+
+  // Try keyword filtering
+  const startType = state.pornireStart || 'cheie';
+  const startKeywords = startType === 'buton' ? ['push', 'buton', 'start stop', 'keyless', 'pasiv'] : ['cheie', 'contact', 'key'];
+  const cutieKeywords = cutieType === 'automata' ? ['automat', 'dsg', 'cvt', 'tiptronic'] : ['manual', 'manuala'];
+
+  const allKeywords = [...startKeywords, ...cutieKeywords];
+  const filtered = allItems.filter(p => allKeywords.some(k => p.name && p.name.toLowerCase().includes(k)));
+
+  // Build info banner text
+  const startLabel = startType === 'buton' ? 'Start/Stop (buton)' : 'Cheie (contact)';
+  const cutieLabel = cutieType === 'automata' ? 'Cutie automată' : 'Cutie manuală';
+  const bannerText = '🔑 Selecția ta: <strong>' + startLabel + '</strong> · <strong>' + cutieLabel + '</strong>';
+
+  prepareProductsScreen(filtered.length > 0 ? filtered : allItems, 'pornire', null, bannerText);
+}
+
+// ─── Shared product screen preparation ───────────────────────────────
+function prepareProductsScreen(items, catKey, extraBreadcrumb, bannerHtml) {
+  state.catKey = catKey;
+  state.catName = CAT_NAMES[catKey] || catKey;
+  state.displayedCount = 0;
+  state.currentItems = items;
+
+  const bcLabel = state.catName + (extraBreadcrumb ? ' · ' + extraBreadcrumb : '');
+  document.getElementById('bc3').innerHTML =
+    '<strong>' + escHtml(state.marcaName) + '</strong>' +
+    '<span class="sep">›</span>' +
+    escHtml(state.modelName) +
+    '<span class="sep">›</span>' +
+    escHtml(bcLabel);
+
+  const total = items.length;
+  const dedCount = items.filter(p=>p._badge==='dedicated').length;
+  const univCount = items.filter(p=>p._badge==='universal').length;
+  let metaHtml = '';
+  if (bannerHtml) metaHtml = '<div class="info-banner">' + bannerHtml + '</div>';
+  if (dedCount > 0) {
+    metaHtml += '<span>' + dedCount + ' produse dedicate</span> + ' + univCount + ' universale — total <span>' + total + '</span>';
+  } else if (total > 0) {
+    metaHtml += 'Nu am găsit produse dedicate. Iată produsele universale disponibile: <span>' + total + '</span>';
+  } else {
+    metaHtml += 'Nu am găsit produse pentru această selecție.';
+  }
+  document.getElementById('products-meta').innerHTML = metaHtml;
+
+  document.getElementById('products-container').innerHTML = '';
+  renderProducts();
+  goTo(3);
 }
 
 // ─── Screen 1: dropdowns ─────────────────────────────────────────────
@@ -310,62 +548,61 @@ function goToCategories() {
   state.modelName = selModel.options[selModel.selectedIndex].text;
   document.getElementById('bc2').innerHTML =
     '🚗 <span>' + escHtml(state.marcaName) + '</span> › ' + escHtml(state.modelName);
+  // ─── Salvează vehiculul în localStorage (sincronizare cu widget.js) ────
+  saveVehicleToStorage();
+
+  renderCategoryHub();
   goTo(2);
+}
+
+function saveVehicleToStorage() {
+  try {
+    const vehicle = {
+      marca: state.marcaName,
+      model: state.modelName,
+      marcaId: state.marcaId,
+      modelId: state.modelId,
+      marcaNume: state.marcaName,
+      modelNume: state.modelName
+    };
+    localStorage.setItem('edotec_vehicle', JSON.stringify(vehicle));
+
+    // Notifică window.opener (dacă configuratorul e deschis ca popup din edotec.ro)
+    if (window.opener && !window.opener.closed) {
+      window.opener.postMessage(
+        JSON.stringify({ type: 'edotec_vehicle_selected', vehicle: vehicle }),
+        '*'
+      );
+    }
+
+    // Notifică cross-tab via BroadcastChannel (same-origin)
+    if (window.BroadcastChannel) {
+      const bc = new BroadcastChannel('edotec_vehicle_channel');
+      bc.postMessage({ type: 'edotec_vehicle_selected', vehicle: vehicle });
+      bc.close();
+    }
+  } catch(e) {
+    console.warn('[EdoTec Configurator] Nu am putut salva vehiculul:', e);
+  }
 }
 
 // ─── Screen 3: products ───────────────────────────────────────────────
 const PAGE_SIZE = 12;
 
 function goToProducts(catKey) {
-  state.catKey = catKey;
-  state.catName = CAT_NAMES[catKey] || catKey;
-  state.displayedCount = 0;
-
-  // Build breadcrumb
-  document.getElementById('bc3').innerHTML =
-    '<strong>' + escHtml(state.marcaName) + '</strong>' +
-    '<span class="sep">›</span>' +
-    escHtml(state.modelName) +
-    '<span class="sep">›</span>' +
-    escHtml(state.catName);
-
-  // Gather products
   const catData = PRODUCTS[catKey] || {};
-  const marcaData = catData[state.marcaId] || {};
-  const modelData = catData[state.marcaId] && catData[state.marcaId][state.modelId] ? catData[state.marcaId][state.modelId] : [];
+  const modelData = (catData[state.marcaId] && catData[state.marcaId][state.modelId]) ? catData[state.marcaId][state.modelId] : [];
   const marcaUniversal = (catData[state.marcaId] && catData[state.marcaId]['universal']) ? catData[state.marcaId]['universal'] : [];
   const globalUniversal = (catData['universal'] && catData['universal']['universal']) ? catData['universal']['universal'] : [];
 
-  // Dedicated = exact model match; flagged
   const dedicated = modelData.map(p => ({...p, _badge:'dedicated'}));
   const universal = [...marcaUniversal, ...globalUniversal]
-    .filter((p,i,arr) => arr.findIndex(x => x.id === p.id) === i)  // dedup
+    .filter((p,i,arr) => arr.findIndex(x => x.id === p.id) === i)
     .map(p => ({...p, _badge:'universal'}));
-
-  // Remove from universal what's already in dedicated (same id)
   const dedicatedIds = new Set(dedicated.map(p=>p.id));
   const universalFiltered = universal.filter(p => !dedicatedIds.has(p.id));
 
-  state.currentItems = [...dedicated, ...universalFiltered];
-
-  // Meta
-  const total = state.currentItems.length;
-  const dedCount = dedicated.length;
-  let metaHtml = '';
-  if (dedCount > 0) {
-    metaHtml = '<span>' + dedCount + ' produse dedicate</span> + ' + universalFiltered.length + ' universale — total <span>' + total + '</span>';
-  } else if (total > 0) {
-    metaHtml = 'Nu am găsit produse dedicate. Iată produsele universale disponibile: <span>' + total + '</span>';
-  } else {
-    metaHtml = 'Nu am găsit produse pentru această selecție.';
-  }
-  document.getElementById('products-meta').innerHTML = metaHtml;
-
-  // Clear container and render
-  document.getElementById('products-container').innerHTML = '';
-  state.displayedCount = 0;
-  renderProducts();
-  goTo(3);
+  prepareProductsScreen([...dedicated, ...universalFiltered], catKey);
 }
 
 function renderProducts() {
